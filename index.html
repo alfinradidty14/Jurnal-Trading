@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AuraFx — Apple Liquid Forex Trading Journal</title>
+  <title>Jurnal Trading Forex</title>
   <style>
     /* ==========================================================================
-       AuraFx Apple Liquid Display Design System (iOS / macOS Glassmorphism)
+       Desain Jurnal Trading Forex — Clean Glassmorphism
        ========================================================================== */
     :root {
       --bg-dark: #070913;
@@ -15,20 +15,16 @@
       --glass-surface-active: rgba(255, 255, 255, 0.12);
       --glass-border: rgba(255, 255, 255, 0.12);
       --glass-border-subtle: rgba(255, 255, 255, 0.06);
-      --glass-highlight: rgba(255, 255, 255, 0.2);
       
       --accent-blue: #0A84FF;
       --accent-cyan: #30B0C7;
       --accent-indigo: #5E5CE6;
-      --accent-purple: #BF5AF2;
       
       --profit-green: #30D158;
       --profit-green-soft: rgba(48, 209, 88, 0.15);
-      --profit-glow: rgba(48, 209, 88, 0.3);
       
       --loss-red: #FF453A;
       --loss-red-soft: rgba(255, 69, 58, 0.15);
-      --loss-glow: rgba(255, 69, 58, 0.3);
       
       --warning-amber: #FFD60A;
       --warning-soft: rgba(255, 214, 10, 0.15);
@@ -41,9 +37,7 @@
       --radius-sm: 10px;
       --radius-md: 16px;
       --radius-lg: 22px;
-      --radius-xl: 30px;
       --shadow-liquid: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      --shadow-glow: 0 0 30px rgba(10, 132, 255, 0.2);
     }
 
     * {
@@ -63,8 +57,8 @@
       padding-bottom: 60px;
     }
 
-    /* Ambient Liquid Glowing Orbs */
-    .liquid-mesh {
+    /* Ambient Glow Background */
+    .ambient-mesh {
       position: fixed;
       top: 0;
       left: 0;
@@ -79,7 +73,7 @@
       position: absolute;
       border-radius: 50%;
       filter: blur(90px);
-      opacity: 0.45;
+      opacity: 0.4;
       animation: floatOrb 22s infinite alternate ease-in-out;
     }
 
@@ -107,17 +101,16 @@
       bottom: -100px;
       left: 20%;
       background: radial-gradient(circle, #30D158 0%, rgba(48, 209, 88, 0) 70%);
-      opacity: 0.25;
+      opacity: 0.22;
       animation-delay: -14s;
     }
 
     @keyframes floatOrb {
       0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(60px, 40px) scale(1.08); }
-      100% { transform: translate(-40px, 70px) scale(0.95); }
+      50% { transform: translate(50px, 35px) scale(1.05); }
+      100% { transform: translate(-35px, 60px) scale(0.96); }
     }
 
-    /* Layout Containers */
     .app-container {
       max-width: 1280px;
       margin: 0 auto;
@@ -125,7 +118,7 @@
     }
 
     /* Glass Panels */
-    .liquid-card {
+    .glass-card {
       background: var(--glass-surface);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -137,18 +130,18 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .liquid-card::before {
+    .glass-card::before {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       pointer-events: none;
     }
 
-    /* Header & Navigation */
+    /* Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -164,33 +157,27 @@
     }
 
     .brand-icon {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 12px;
       background: linear-gradient(135deg, #0A84FF, #5E5CE6);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 18px rgba(10, 132, 255, 0.4);
+      box-shadow: 0 6px 16px rgba(10, 132, 255, 0.35);
     }
 
     .brand-icon svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       fill: #fff;
     }
 
     .brand-title h1 {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 700;
       letter-spacing: -0.4px;
       color: var(--text-primary);
-    }
-
-    .brand-title p {
-      font-size: 12px;
-      color: var(--text-secondary);
-      letter-spacing: 0.2px;
     }
 
     .header-actions {
@@ -200,8 +187,8 @@
       flex-wrap: wrap;
     }
 
-    /* Liquid Buttons */
-    .liquid-btn {
+    /* Buttons */
+    .btn-action {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -216,39 +203,38 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    .liquid-btn:hover {
+    .btn-action:hover {
       background: var(--glass-surface-hover);
       border-color: rgba(255, 255, 255, 0.25);
       transform: translateY(-1.5px);
     }
 
-    .liquid-btn:active {
+    .btn-action:active {
       transform: translateY(0.5px) scale(0.98);
       background: var(--glass-surface-active);
     }
 
-    .liquid-btn-primary {
+    .btn-primary {
       background: linear-gradient(135deg, #0A84FF, #0066CC);
       border-color: rgba(255, 255, 255, 0.3);
       box-shadow: 0 8px 24px rgba(10, 132, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
-    .liquid-btn-primary:hover {
+    .btn-primary:hover {
       background: linear-gradient(135deg, #2094FF, #0A75E5);
-      box-shadow: 0 10px 28px rgba(10, 132, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      box-shadow: 0 10px 28px rgba(10, 132, 255, 0.55);
     }
 
-    .liquid-btn-success {
+    .btn-success {
       background: linear-gradient(135deg, #30D158, #15803D);
       border-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 8px 20px rgba(48, 209, 88, 0.3);
+      box-shadow: 0 6px 18px rgba(48, 209, 88, 0.25);
     }
 
-    /* 30-Day Win & Performance Banner Card */
-    .monthly-banner-card {
+    /* 30-Day Win & Performance Card */
+    .monthly-card {
       padding: 20px 24px;
       margin-bottom: 24px;
       background: linear-gradient(135deg, rgba(48, 209, 88, 0.08) 0%, rgba(10, 132, 255, 0.06) 100%);
@@ -311,7 +297,7 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* 30-Day Activity Ledger Strip (Apple Activity style) */
+    /* 30-Day Activity Strip */
     .activity-strip-wrapper {
       margin-top: 10px;
     }
@@ -323,6 +309,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .activity-scroll-row {
@@ -387,7 +375,7 @@
       box-shadow: 0 0 6px rgba(255, 214, 10, 0.8);
     }
 
-    /* KPI Summary Grid */
+    /* Overall KPIs */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -405,7 +393,7 @@
     .kpi-label {
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.7px;
       font-weight: 600;
       color: var(--text-secondary);
       display: flex;
@@ -444,7 +432,7 @@
     .text-loss { color: var(--loss-red) !important; }
     .text-warning { color: var(--warning-amber) !important; }
 
-    /* Main Content Layout */
+    /* Dashboard Layout */
     .dashboard-layout {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -470,18 +458,19 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .panel-title {
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 600;
-      letter-spacing: -0.2px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    /* Segmented Control (Apple Style) */
+    /* Segmented Control */
     .segmented-control {
       display: inline-flex;
       background: rgba(0, 0, 0, 0.35);
@@ -520,7 +509,7 @@
       display: block;
     }
 
-    /* Side Panel & Calculator */
+    /* Side Calculator */
     .side-panel {
       display: flex;
       flex-direction: column;
@@ -566,7 +555,6 @@
       box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
     }
 
-    /* Date Input specific styling */
     input[type="date"].glass-input {
       color-scheme: dark;
     }
@@ -593,7 +581,6 @@
       color: var(--accent-cyan);
     }
 
-    /* Trade Performance Distribution */
     .distrib-bar {
       height: 8px;
       border-radius: 980px;
@@ -626,7 +613,7 @@
       border-radius: 50%;
     }
 
-    /* Trade List Section */
+    /* Trades Section */
     .trades-section {
       padding: 24px;
     }
@@ -734,20 +721,6 @@
       box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
     }
 
-    .filter-pill-special {
-      background: rgba(48, 209, 88, 0.12);
-      border-color: rgba(48, 209, 88, 0.3);
-      color: var(--profit-green);
-    }
-
-    .filter-pill-special.active {
-      background: var(--profit-green);
-      border-color: var(--profit-green);
-      color: #000;
-      box-shadow: 0 4px 14px rgba(48, 209, 88, 0.4);
-    }
-
-    /* Glass Table */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -811,21 +784,6 @@
       border: 1px solid rgba(255, 69, 58, 0.3);
     }
 
-    .badge-win {
-      background: var(--profit-green-soft);
-      color: var(--profit-green);
-    }
-
-    .badge-loss {
-      background: var(--loss-red-soft);
-      color: var(--loss-red);
-    }
-
-    .badge-be {
-      background: var(--warning-soft);
-      color: var(--warning-amber);
-    }
-
     .badge-tag {
       background: rgba(255, 255, 255, 0.07);
       color: var(--text-secondary);
@@ -848,7 +806,7 @@
       background: rgba(255, 69, 58, 0.15);
     }
 
-    /* Liquid Modals */
+    /* Modals */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -875,9 +833,9 @@
       max-height: 90vh;
       overflow-y: auto;
       padding: 28px;
-      background: rgba(18, 22, 38, 0.85);
+      background: rgba(18, 22, 38, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
     }
 
     .modal-header {
@@ -943,9 +901,17 @@
       padding-right: 32px;
     }
 
+    select.glass-input optgroup {
+      background: #0f172a;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-style: normal;
+    }
+
     select.glass-input option {
       background: #0f172a;
       color: #fff;
+      font-weight: normal;
     }
 
     textarea.glass-input {
@@ -962,7 +928,6 @@
       border-top: 1px solid var(--glass-border-subtle);
     }
 
-    /* Empty state */
     .empty-state {
       padding: 48px 20px;
       text-align: center;
@@ -976,7 +941,7 @@
       stroke: var(--text-tertiary);
     }
 
-    /* Notification Toast */
+    /* Toast Notification */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -1005,7 +970,7 @@
       opacity: 1;
     }
 
-    /* Detail View Modal Elements */
+    /* Detail View Modal */
     .trade-detail-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1037,8 +1002,8 @@
 </head>
 <body>
 
-  <!-- Ambient Liquid Glow Elements -->
-  <div class="liquid-mesh">
+  <!-- Ambient Glow Background -->
+  <div class="ambient-mesh">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
@@ -1046,8 +1011,8 @@
 
   <div class="app-container">
     
-    <!-- Header -->
-    <header class="liquid-card">
+    <!-- Clean Header: Cukup tulisan Jurnal Trading Forex -->
+    <header class="glass-card">
       <div class="brand-group">
         <div class="brand-icon">
           <svg viewBox="0 0 24 24">
@@ -1055,87 +1020,86 @@
           </svg>
         </div>
         <div class="brand-title">
-          <h1>AuraFx Journal</h1>
-          <p>Apple Liquid Display • Forex Performance & Date Analytics</p>
+          <h1>Jurnal Trading Forex</h1>
         </div>
       </div>
       <div class="header-actions">
-        <button class="liquid-btn" onclick="exportCSV()" title="Ekspor data ke CSV/Excel">
+        <button class="btn-action" onclick="exportCSV()" title="Ekspor data ke CSV/Excel">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
           </svg>
           Export CSV
         </button>
-        <button class="liquid-btn" onclick="backupJSON()" title="Cadangkan Data">
+        <button class="btn-action" onclick="backupJSON()" title="Cadangkan Data">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          Backup
+          Cadangkan
         </button>
-        <button class="liquid-btn liquid-btn-primary" onclick="openNewTradeModal()">
+        <button class="btn-action btn-primary" onclick="openNewTradeModal()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Catat Trade
+          Catat Transaksi
         </button>
       </div>
     </header>
 
-    <!-- NEW FEATURE: 1 Bulan Terakhir (Last 30 Days) Performance Banner Card -->
-    <section class="liquid-card monthly-banner-card">
+    <!-- Ringkasan Kemenangan 1 Bulan Terakhir -->
+    <section class="glass-card monthly-card">
       <div class="monthly-header">
         <div class="monthly-title-group">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--profit-green)" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M12 6v6l4 2"></path>
           </svg>
-          <span style="font-size: 15px; font-weight: 700;">Riwayat & Performa 1 Bulan Terakhir</span>
-          <span class="monthly-badge" id="mBadgeRange">30 Hari Terakhir</span>
+          <span style="font-size: 15px; font-weight: 700;">Performa 30 Hari Terakhir</span>
+          <span class="monthly-badge">30 Hari</span>
         </div>
         <div>
-          <button class="liquid-btn liquid-btn-success" id="btnFilterMonth" onclick="toggleMonthFilter()">
+          <button class="btn-action btn-success" id="btnFilterMonth" onclick="toggleMonthFilter()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
-            <span id="btnFilterMonthText">Fokus 1 Bulan Terakhir</span>
+            <span id="btnFilterMonthText">Fokus 30 Hari</span>
           </button>
         </div>
       </div>
 
       <div class="monthly-metrics-grid">
         <div class="m-stat-card">
-          <div class="m-stat-title">Win Rate 30 Hari</div>
+          <div class="m-stat-title">Win Rate (30 Hari)</div>
           <div class="m-stat-val text-profit" id="mWinRate">0.0%</div>
           <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;" id="mWinBreakdown">0 Menang • 0 Kalah</div>
         </div>
 
         <div class="m-stat-card">
-          <div class="m-stat-title">Net Profit 30 Hari</div>
+          <div class="m-stat-title">Laba Bersih (30 Hari)</div>
           <div class="m-stat-val" id="mNetPnl">$0.00</div>
           <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;" id="mReturn">0.00% Return</div>
         </div>
 
         <div class="m-stat-card">
-          <div class="m-stat-title">Profit Factor (30D)</div>
+          <div class="m-stat-title">Profit Factor (30 Hari)</div>
           <div class="m-stat-val text-warning" id="mProfitFactor">0.00</div>
           <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;" id="mAvgWinLoss">Win/Loss: $0 / $0</div>
         </div>
 
         <div class="m-stat-card">
-          <div class="m-stat-title">Frekuensi & Rata-rata RRR</div>
+          <div class="m-stat-title">Rata-rata RRR & Total</div>
           <div class="m-stat-val" id="mAvgRRR" style="color: var(--accent-cyan);">1:0.00</div>
           <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;" id="mTotalTrades">0 Transaksi</div>
         </div>
       </div>
 
-      <!-- Activity Calendar Strip (30 Days) -->
+      <!-- Kalender Kemenangan 30 Hari -->
       <div class="activity-strip-wrapper">
         <div class="activity-strip-title">
-          <span>Kalender Kemenangan 30 Hari (Klik tanggal untuk melihat transaksi hari itu)</span>
-          <span style="font-size: 11px; opacity: 0.8;">● Hijau = Profit | ● Merah = Loss | ● Kuning = BE</span>
+          <span>Kalender Transaksi 30 Hari Terakhir (Klik tanggal untuk memfilter)</span>
+          <span style="font-size: 11px; opacity: 0.85;">● Hijau = Untung | ● Merah = Rugi | ● Kuning = Impas</span>
         </div>
         <div class="activity-scroll-row" id="activityStrip">
           <!-- Dynamically Injected 30 Days -->
@@ -1143,11 +1107,11 @@
       </div>
     </section>
 
-    <!-- Overall Key Performance Indicators (KPIs) -->
+    <!-- Ringkasan Kinerja Utama (Total) -->
     <section class="kpi-grid">
-      <div class="liquid-card kpi-card">
+      <div class="glass-card kpi-card">
         <div class="kpi-label">
-          <span>Total Net Profit</span>
+          <span>Total Laba / Rugi (Net P&L)</span>
           <div class="kpi-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -1159,9 +1123,9 @@
         <div class="kpi-subtext" id="kpiReturn">0.00% Return on Equity</div>
       </div>
 
-      <div class="liquid-card kpi-card">
+      <div class="glass-card kpi-card">
         <div class="kpi-label">
-          <span>Overall Win Rate</span>
+          <span>Tingkat Kemenangan (Win Rate)</span>
           <div class="kpi-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -1173,9 +1137,9 @@
         <div class="kpi-subtext" id="kpiWinCount">0 Menang • 0 Kalah • 0 BE</div>
       </div>
 
-      <div class="liquid-card kpi-card">
+      <div class="glass-card kpi-card">
         <div class="kpi-label">
-          <span>Profit Factor Total</span>
+          <span>Profit Factor Keseluruhan</span>
           <div class="kpi-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -1188,9 +1152,9 @@
         <div class="kpi-subtext" id="kpiTotalTrades">Total 0 Transaksi</div>
       </div>
 
-      <div class="liquid-card kpi-card">
+      <div class="glass-card kpi-card">
         <div class="kpi-label">
-          <span>Avg RRR & Win/Loss</span>
+          <span>Rata-rata RRR & Rasio</span>
           <div class="kpi-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -1198,26 +1162,26 @@
           </div>
         </div>
         <div class="kpi-value" id="kpiAvgRRR">1:0.00</div>
-        <div class="kpi-subtext" id="kpiAvgWinLoss">Win: $0 | Loss: $0</div>
+        <div class="kpi-subtext" id="kpiAvgWinLoss">Win: +$0 | Loss: -$0</div>
       </div>
     </section>
 
-    <!-- Dashboard Analytics & Quick Calculator -->
+    <!-- Grafik & Kalkulator Risiko -->
     <div class="dashboard-layout">
       
-      <!-- Chart Panel -->
-      <div class="liquid-card chart-panel">
+      <!-- Grafik Ekuitas -->
+      <div class="glass-card chart-panel">
         <div class="panel-header">
           <div class="panel-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 3v18h18"/>
               <path d="m19 9-5 5-4-4-3 3"/>
             </svg>
-            Kurva Ekuitas & Pertumbuhan Saldo
+            Kurva Pertumbuhan Ekuitas
           </div>
           <div class="segmented-control">
-            <button class="segment-btn active" id="btnEquityCurve" onclick="switchChartMode('equity')">Equity Curve</button>
-            <button class="segment-btn" id="btnPnlBars" onclick="switchChartMode('bars')">PnL per Trade</button>
+            <button class="segment-btn active" id="btnEquityCurve" onclick="switchChartMode('equity')">Kurva Ekuitas</button>
+            <button class="segment-btn" id="btnPnlBars" onclick="switchChartMode('bars')">Laba/Rugi per Trade</button>
           </div>
         </div>
 
@@ -1226,9 +1190,9 @@
         </div>
       </div>
 
-      <!-- Side Risk Calculator & Win Distribution -->
+      <!-- Kalkulator Risiko -->
       <div class="side-panel">
-        <div class="liquid-card calc-card">
+        <div class="glass-card calc-card">
           <div class="panel-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="4" y="2" width="16" height="20" rx="2"></rect>
@@ -1242,7 +1206,7 @@
               <path d="M12 18h.01"></path>
               <path d="M8 18h.01"></path>
             </svg>
-            Kalkulator Lot & Risiko
+            Kalkulator Risiko & Ukuran Lot
           </div>
 
           <div class="calc-input-group">
@@ -1251,7 +1215,7 @@
               <input type="number" id="calcBalance" class="glass-input" value="10000" oninput="calculateLot()">
             </div>
             <div class="input-field-compact">
-              <label>Toleransi Risiko (%)</label>
+              <label>Risiko per Trade (%)</label>
               <input type="number" id="calcRiskPct" class="glass-input" value="1.0" step="0.1" oninput="calculateLot()">
             </div>
             <div class="input-field-compact">
@@ -1266,18 +1230,18 @@
 
           <div class="calc-result-box">
             <div>
-              <div class="calc-result-title">Rekomendasi Lot Size</div>
+              <div class="calc-result-title">Rekomendasi Ukuran Lot</div>
               <div class="calc-result-value" id="calcRecLot">0.40 Lot</div>
             </div>
             <div style="text-align: right;">
-              <div class="calc-result-title">Jumlah Risiko ($)</div>
+              <div class="calc-result-title">Nilai Risiko ($)</div>
               <div style="font-size: 15px; font-weight: 600; color: #fff;" id="calcRiskAmount">$100.00</div>
             </div>
           </div>
 
           <div style="margin-top: 20px;">
             <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">
-              <span>Rasio Hasil Transaksi</span>
+              <span>Distribusi Hasil Transaksi</span>
               <span id="distribPctWin">0% Win</span>
             </div>
             <div class="distrib-bar">
@@ -1306,8 +1270,8 @@
 
     </div>
 
-    <!-- Trade Log Table Section -->
-    <section class="liquid-card trades-section">
+    <!-- Tabel Riwayat Jurnal -->
+    <section class="glass-card trades-section">
       <div class="table-toolbar">
         <div class="toolbar-row-top">
           <div class="panel-title">
@@ -1318,10 +1282,10 @@
               <line x1="16" y1="17" x2="8" y2="17"></line>
               <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            Riwayat Jurnal Transaksi
+            Daftar Transaksi
           </div>
 
-          <!-- Search Bar -->
+          <!-- Pencarian -->
           <div class="search-wrapper">
             <svg class="search-icon" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"></circle>
@@ -1332,7 +1296,7 @@
         </div>
 
         <div class="toolbar-row-bottom">
-          <!-- NEW FEATURE: Date Picker Filter -->
+          <!-- Filter Tanggal Spesifik -->
           <div class="date-filter-group">
             <span class="date-filter-label">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1343,13 +1307,13 @@
               </svg>
               Filter Tanggal:
             </span>
-            <input type="date" id="filterDateInput" class="glass-input" style="width: auto; min-width: 150px;" onchange="handleDateSelect(this.value)">
-            <button class="liquid-btn" style="padding: 6px 12px; font-size: 11.5px;" onclick="resetDateFilter()">
+            <input type="date" id="filterDateInput" class="glass-input" style="width: auto; min-width: 140px;" onchange="handleDateSelect(this.value)">
+            <button class="btn-action" style="padding: 6px 12px; font-size: 11.5px;" onclick="resetDateFilter()">
               Reset Tanggal
             </button>
           </div>
 
-          <!-- Status & Type Filter Pills -->
+          <!-- Filter Status -->
           <div class="filter-pills">
             <button class="filter-pill active" onclick="setFilter('ALL', this)">Semua</button>
             <button class="filter-pill" onclick="setFilter('WIN', this)">Menang</button>
@@ -1361,10 +1325,10 @@
         </div>
       </div>
 
-      <!-- Active Filter Banner Notification -->
+      <!-- Notifikasi Filter Aktif -->
       <div class="active-filter-banner" id="activeFilterBanner">
         <span id="activeFilterText">Menampilkan data filter</span>
-        <button class="liquid-btn" style="padding: 4px 10px; font-size: 11px;" onclick="clearAllFilters()">Hapus Semua Filter</button>
+        <button class="btn-action" style="padding: 4px 10px; font-size: 11px;" onclick="clearAllFilters()">Hapus Filter</button>
       </div>
 
       <div class="table-responsive">
@@ -1377,14 +1341,14 @@
               <th>Lot</th>
               <th>Entry → Exit</th>
               <th>SL / TP</th>
-              <th>Profit / Loss</th>
+              <th>Laba / Rugi</th>
               <th>RRR</th>
               <th>Strategi & Emosi</th>
               <th style="text-align: right;">Aksi</th>
             </tr>
           </thead>
           <tbody id="tradeTableBody">
-            <!-- Dynamic Trades Injected Here -->
+            <!-- Data Transaksi Injeksi Dinamis -->
           </tbody>
         </table>
         <div id="emptyState" class="empty-state" style="display: none;">
@@ -1393,18 +1357,18 @@
             <line x1="12" y1="8" x2="12" y2="12"></line>
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
-          <p id="emptyStateText">Belum ada data transaksi yang cocok dengan kriteria filter.</p>
+          <p id="emptyStateText">Belum ada transaksi yang cocok dengan kriteria filter.</p>
         </div>
       </div>
     </section>
 
   </div>
 
-  <!-- Modal: Tambah / Edit Trade -->
+  <!-- Modal: Catat / Edit Transaksi -->
   <div class="modal-overlay" id="tradeModal">
-    <div class="liquid-card modal-card">
+    <div class="glass-card modal-card">
       <div class="modal-header">
-        <h2 class="modal-title" id="modalTitle">Catat Transaksi Baru</h2>
+        <h2 class="modal-title" id="modalTitle">Catat Transaksi</h2>
         <button class="modal-close" onclick="closeTradeModal()">&times;</button>
       </div>
 
@@ -1412,14 +1376,49 @@
         <input type="hidden" id="editTradeId">
         
         <div class="form-grid">
+          <!-- Pasangan Mata Uang: Dropdown Pilihan Terstruktur -->
           <div class="form-group">
             <label>Pasangan Mata Uang (Pair)</label>
-            <input type="text" id="fPair" class="glass-input" required placeholder="Contoh: EUR/USD, XAU/USD">
+            <select id="fPair" class="glass-input" required>
+              <optgroup label="Pasangan Mata Uang Utama (Major Pairs)">
+                <option value="EUR/USD" selected>EUR/USD</option>
+                <option value="GBP/USD">GBP/USD</option>
+                <option value="USD/JPY">USD/JPY</option>
+                <option value="AUD/USD">AUD/USD</option>
+                <option value="USD/CAD">USD/CAD</option>
+                <option value="USD/CHF">USD/CHF</option>
+                <option value="NZD/USD">NZD/USD</option>
+              </optgroup>
+              <optgroup label="Pasangan Cross / Minor">
+                <option value="EUR/JPY">EUR/JPY</option>
+                <option value="GBP/JPY">GBP/JPY</option>
+                <option value="AUD/JPY">AUD/JPY</option>
+                <option value="CAD/JPY">CAD/JPY</option>
+                <option value="CHF/JPY">CHF/JPY</option>
+                <option value="EUR/GBP">EUR/GBP</option>
+                <option value="EUR/AUD">EUR/AUD</option>
+                <option value="EUR/CAD">EUR/CAD</option>
+                <option value="GBP/AUD">GBP/AUD</option>
+                <option value="GBP/CAD">GBP/CAD</option>
+                <option value="AUD/NZD">AUD/NZD</option>
+              </optgroup>
+              <optgroup label="Komoditas & Logam Mulia">
+                <option value="XAU/USD">XAU/USD (Gold / Emas)</option>
+                <option value="XAG/USD">XAG/USD (Silver / Perak)</option>
+                <option value="USOIL">USOIL / WTI (Minyak Mentah)</option>
+              </optgroup>
+              <optgroup label="Kripto & Indeks">
+                <option value="BTC/USD">BTC/USD (Bitcoin)</option>
+                <option value="ETH/USD">ETH/USD (Ethereum)</option>
+                <option value="US30">US30 (Dow Jones)</option>
+                <option value="NAS100">NAS100 (Nasdaq)</option>
+              </optgroup>
+            </select>
           </div>
 
           <div class="form-group">
             <label>Tipe Posisi</label>
-            <select id="fPosition" class="glass-input" required onchange="calculatePlannedRRR()">
+            <select id="fPosition" class="glass-input" required>
               <option value="BUY">BUY (Long)</option>
               <option value="SELL">SELL (Short)</option>
             </select>
@@ -1437,26 +1436,26 @@
 
           <div class="form-group">
             <label>Harga Entry</label>
-            <input type="number" id="fEntry" class="glass-input" step="any" required placeholder="1.08500" oninput="calculatePlannedRRR()">
+            <input type="number" id="fEntry" class="glass-input" step="any" required placeholder="1.08500">
           </div>
 
           <div class="form-group">
-            <label>Harga Exit / Penutupan</label>
+            <label>Harga Exit</label>
             <input type="number" id="fExit" class="glass-input" step="any" required placeholder="1.08950" oninput="calculatePnlAuto()">
           </div>
 
           <div class="form-group">
             <label>Stop Loss (SL)</label>
-            <input type="number" id="fSL" class="glass-input" step="any" required placeholder="1.08200" oninput="calculatePlannedRRR()">
+            <input type="number" id="fSL" class="glass-input" step="any" required placeholder="1.08200">
           </div>
 
           <div class="form-group">
             <label>Take Profit (TP)</label>
-            <input type="number" id="fTP" class="glass-input" step="any" placeholder="1.09200" oninput="calculatePlannedRRR()">
+            <input type="number" id="fTP" class="glass-input" step="any" placeholder="1.09200">
           </div>
 
           <div class="form-group">
-            <label>Profit / Loss Bersih ($)</label>
+            <label>Laba / Rugi Bersih ($)</label>
             <input type="number" id="fPnl" class="glass-input" step="any" required placeholder="+150 atau -50">
           </div>
 
@@ -1474,17 +1473,17 @@
               <option value="Trend Following">Trend Following (MA/Pullback)</option>
               <option value="Reversal / SnR">Reversal & Key SnR</option>
               <option value="News Trading">High-Impact News</option>
-              <option value="Lainnya">Strategi Lainnya</option>
+              <option value="Lainnya">Lainnya</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>Kondisi Psikologi / Emosi</label>
             <select id="fEmotion" class="glass-input">
-              <option value="Disiplin & Tenang">Tenang & Mengikuti Rencana</option>
+              <option value="Disiplin & Tenang">Disiplin & Mengikuti Rencana</option>
               <option value="FOMO">FOMO (Takut Tertinggal)</option>
               <option value="Ragu-ragu">Ragu-ragu / Telat Masuk</option>
-              <option value="Revenge Trading">Revenge Trading / Emosional</option>
+              <option value="Revenge Trading">Revenge Trading</option>
               <option value="Overconfident">Terlalu Percaya Diri</option>
             </select>
           </div>
@@ -1495,22 +1494,22 @@
           </div>
 
           <div class="form-group-full form-group">
-            <label>Catatan & Evaluasi Transaksi</label>
-            <textarea id="fNotes" class="glass-input" placeholder="Apa alasan entry? Apakah aturan SL/TP ditaati? Evaluasi apa yang perlu diperbaiki..."></textarea>
+            <label>Catatan & Evaluasi</label>
+            <textarea id="fNotes" class="glass-input" placeholder="Alasan entry, kepatuhan terhadap aturan SL/TP, atau pelajaran yang didapat..."></textarea>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="liquid-btn" onclick="closeTradeModal()">Batal</button>
-          <button type="submit" class="liquid-btn liquid-btn-primary">Simpan Transaksi</button>
+          <button type="button" class="btn-action" onclick="closeTradeModal()">Batal</button>
+          <button type="submit" class="btn-action btn-primary">Simpan</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal: Detail View Trade -->
+  <!-- Modal: Detail Transaksi -->
   <div class="modal-overlay" id="detailModal">
-    <div class="liquid-card modal-card" style="max-width: 580px;">
+    <div class="glass-card modal-card" style="max-width: 580px;">
       <div class="modal-header">
         <h2 class="modal-title" id="detTitle">Detail Transaksi</h2>
         <button class="modal-close" onclick="closeDetailModal()">&times;</button>
@@ -1525,14 +1524,14 @@
 
       <div id="detChartWrap" style="margin-top: 14px; display: none;">
         <div class="detail-title">Tangkapan Layar Chart</div>
-        <a id="detChartLink" href="#" target="_blank" class="liquid-btn" style="width: 100%; justify-content: center; margin-top: 6px;">
+        <a id="detChartLink" href="#" target="_blank" class="btn-action" style="width: 100%; justify-content: center; margin-top: 6px;">
           Buka Screenshot TradingView ↗
         </a>
       </div>
 
       <div class="modal-footer" style="justify-content: space-between;">
-        <button type="button" class="liquid-btn" style="color: var(--loss-red);" id="detDeleteBtn">Hapus Transaksi</button>
-        <button type="button" class="liquid-btn liquid-btn-primary" onclick="closeDetailModal()">Tutup</button>
+        <button type="button" class="btn-action" style="color: var(--loss-red);" id="detDeleteBtn">Hapus Transaksi</button>
+        <button type="button" class="btn-action btn-primary" onclick="closeDetailModal()">Tutup</button>
       </div>
     </div>
   </div>
@@ -1548,7 +1547,6 @@
 
   <!-- JavaScript App Logic -->
   <script>
-    // Initial Default Data (Forex Real Sample Trades across recent 30-day timeline)
     const initialTrades = [
       {
         id: "tr_1",
@@ -1582,7 +1580,7 @@
         strategy: "Reversal / SnR",
         emotion: "FOMO",
         chartUrl: "",
-        notes: "Masuk terlalu dini sebelum ada candle penolakan valid di supply zone h4."
+        notes: "Masuk terlalu dini sebelum ada candle penolakan valid di supply zone H4."
       },
       {
         id: "tr_3",
@@ -1692,11 +1690,10 @@
     let trades = [];
     let currentFilter = 'ALL';
     let currentSearch = '';
-    let selectedDateFilter = ''; // YYYY-MM-DD
+    let selectedDateFilter = '';
     let isMonthFilterActive = false;
-    let chartMode = 'equity'; // 'equity' or 'bars'
+    let chartMode = 'equity';
 
-    // Init App
     window.addEventListener('DOMContentLoaded', () => {
       loadTrades();
       calculateLot();
@@ -1704,7 +1701,6 @@
       initChartResize();
     });
 
-    // Local Storage Management
     function loadTrades() {
       const stored = localStorage.getItem('aurafx_trades');
       if (stored) {
@@ -1729,12 +1725,10 @@
       return 'BE';
     }
 
-    // NEW FEATURE: 1 Bulan Terakhir (Last 30 Days) Analytics & Calendar Strip
     function updateMonthlyAnalytics() {
-      const now = new Date("2026-10-08T15:30:00"); // Base reference date
+      const now = new Date("2026-10-08T15:30:00");
       const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
 
-      // Filter trades within 30 days
       const monthTrades = trades.filter(t => {
         const tDate = new Date(t.date);
         return tDate >= thirtyDaysAgo && tDate <= now;
@@ -1782,7 +1776,6 @@
       const mAvgRRRVal = mValidRRR > 0 ? (mTotalRRR / mValidRRR).toFixed(2) : "0.00";
       const mReturnPct = ((mTotalPnl / INITIAL_CAPITAL) * 100).toFixed(2);
 
-      // DOM updates for monthly stats
       document.getElementById('mWinRate').innerText = `${mWinRateVal}%`;
       document.getElementById('mWinBreakdown').innerText = `${mWins} Menang • ${mLosses} Kalah • ${mBes} BE`;
 
@@ -1795,9 +1788,8 @@
       document.getElementById('mAvgWinLoss').innerText = `Win: +$${mAvgWinVal} | Loss: -$${mAvgLossVal}`;
 
       document.getElementById('mAvgRRR').innerText = `1:${mAvgRRRVal}`;
-      document.getElementById('mTotalTrades').innerText = `${totalMTrades} Transaksi (30 Hari)`;
+      document.getElementById('mTotalTrades').innerText = `${totalMTrades} Transaksi`;
 
-      // Render 30 Days Activity Strip
       renderActivityStrip(now);
     }
 
@@ -1805,7 +1797,6 @@
       const container = document.getElementById('activityStrip');
       container.innerHTML = '';
 
-      // Create a map of date string (YYYY-MM-DD) to trades
       const dayMap = {};
       trades.forEach(t => {
         const dStr = t.date.slice(0, 10);
@@ -1813,12 +1804,10 @@
         dayMap[dStr].push(t);
       });
 
-      // Generate last 30 days chronologically
       for (let i = 29; i >= 0; i--) {
         const d = new Date(currentDate.getTime() - (i * 24 * 60 * 60 * 1000));
         const dateISO = d.toISOString().slice(0, 10);
         const dayDisplay = d.getDate();
-        const monthShort = d.toLocaleDateString('id-ID', { month: 'short' });
 
         const pill = document.createElement('div');
         pill.className = 'day-pill';
@@ -1826,7 +1815,6 @@
           pill.classList.add('active-day');
         }
 
-        // Determine day indicator
         let indicatorClass = '';
         let dayTradesCount = 0;
         let dayNetPnl = 0;
@@ -1839,7 +1827,7 @@
           else indicatorClass = 'be';
         }
 
-        pill.title = `${dateISO}: ${dayTradesCount > 0 ? `${dayTradesCount} trade (PnL: ${dayNetPnl >= 0 ? '+' : ''}$${dayNetPnl.toFixed(2)})` : 'Tidak ada trade'}`;
+        pill.title = `${dateISO}: ${dayTradesCount > 0 ? `${dayTradesCount} transaksi (Laba/Rugi: ${dayNetPnl >= 0 ? '+' : ''}$${dayNetPnl.toFixed(2)})` : 'Tidak ada transaksi'}`;
         
         pill.onclick = () => {
           handleDateSelect(dateISO);
@@ -1853,26 +1841,24 @@
       }
     }
 
-    // Toggle 30-Day Filter
     function toggleMonthFilter() {
       isMonthFilterActive = !isMonthFilterActive;
       const btn = document.getElementById('btnFilterMonth');
       const text = document.getElementById('btnFilterMonthText');
 
       if (isMonthFilterActive) {
-        selectedDateFilter = ''; // Reset specific day if active
+        selectedDateFilter = '';
         document.getElementById('filterDateInput').value = '';
-        btn.classList.add('liquid-btn-primary');
-        text.innerText = 'Reset Tampilan Penuh';
+        btn.classList.add('btn-primary');
+        text.innerText = 'Tampilkan Semua';
       } else {
-        btn.classList.remove('liquid-btn-primary');
-        text.innerText = 'Fokus 1 Bulan Terakhir';
+        btn.classList.remove('btn-primary');
+        text.innerText = 'Fokus 30 Hari';
       }
 
       renderAll();
     }
 
-    // Overall KPIs
     function updateKPIs() {
       const totalTrades = trades.length;
       let totalPnl = 0;
@@ -1916,7 +1902,6 @@
       const avgRRRVal = validRRRCount > 0 ? (totalRRR / validRRRCount).toFixed(2) : "0.00";
       const returnPct = ((totalPnl / INITIAL_CAPITAL) * 100).toFixed(2);
 
-      // DOM Updates
       const kpiNetPnl = document.getElementById('kpiNetPnl');
       kpiNetPnl.innerText = (totalPnl >= 0 ? "+$" : "-$") + Math.abs(totalPnl).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       kpiNetPnl.className = 'kpi-value ' + (totalPnl >= 0 ? 'text-profit' : 'text-loss');
@@ -1933,7 +1918,6 @@
       document.getElementById('kpiAvgRRR').innerText = `1:${avgRRRVal}`;
       document.getElementById('kpiAvgWinLoss').innerText = `Win: +$${avgWin} | Loss: -$${avgLoss}`;
 
-      // Distribution Bar
       const winPctBar = totalTrades > 0 ? (wins / totalTrades) * 100 : 0;
       const lossPctBar = totalTrades > 0 ? (losses / totalTrades) * 100 : 0;
       const bePctBar = totalTrades > 0 ? (bes / totalTrades) * 100 : 0;
@@ -1948,7 +1932,6 @@
       document.getElementById('lblBe').innerText = `BE: ${bes}`;
     }
 
-    // Trade Table Rendering
     function renderTable() {
       const tbody = document.getElementById('tradeTableBody');
       const emptyState = document.getElementById('emptyState');
@@ -1959,21 +1942,17 @@
       const now = new Date("2026-10-08T15:30:00");
       const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
 
-      // Filter and Search logic
       const filtered = trades.filter(t => {
-        // 1. Month Filter
         if (isMonthFilterActive) {
           const tDate = new Date(t.date);
           if (tDate < thirtyDaysAgo || tDate > now) return false;
         }
 
-        // 2. Specific Date Filter
         if (selectedDateFilter) {
           const tDateStr = t.date.slice(0, 10);
           if (tDateStr !== selectedDateFilter) return false;
         }
 
-        // 3. Status/Type Filter
         const res = getTradeResult(t.pnl);
         if (currentFilter === 'WIN' && res !== 'WIN') return false;
         if (currentFilter === 'LOSS' && res !== 'LOSS') return false;
@@ -1981,7 +1960,6 @@
         if (currentFilter === 'BUY' && t.position !== 'BUY') return false;
         if (currentFilter === 'SELL' && t.position !== 'SELL') return false;
 
-        // 4. Search input
         if (currentSearch.trim() !== '') {
           const q = currentSearch.toLowerCase();
           const matchPair = t.pair.toLowerCase().includes(q);
@@ -1993,10 +1971,9 @@
         return true;
       });
 
-      // Update Filter Banner Notification
       const activeFilterDescs = [];
       if (selectedDateFilter) activeFilterDescs.push(`Tanggal: ${selectedDateFilter}`);
-      if (isMonthFilterActive) activeFilterDescs.push(`1 Bulan Terakhir`);
+      if (isMonthFilterActive) activeFilterDescs.push(`30 Hari Terakhir`);
       if (currentFilter !== 'ALL') activeFilterDescs.push(`Status: ${currentFilter}`);
       if (currentSearch.trim()) activeFilterDescs.push(`Pencarian: "${currentSearch}"`);
 
@@ -2011,12 +1988,11 @@
         emptyState.style.display = 'block';
         document.getElementById('emptyStateText').innerText = selectedDateFilter 
           ? `Tidak ada transaksi pada tanggal ${selectedDateFilter}.` 
-          : 'Belum ada data transaksi yang cocok dengan kriteria filter.';
+          : 'Belum ada transaksi yang cocok dengan filter.';
         return;
       }
       emptyState.style.display = 'none';
 
-      // Sort newest first
       const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
 
       sorted.forEach(t => {
@@ -2026,7 +2002,6 @@
         const pnlFormatted = (pnlNum >= 0 ? '+$' : '-$') + Math.abs(pnlNum).toFixed(2);
         const pnlClass = res === 'WIN' ? 'text-profit' : (res === 'LOSS' ? 'text-loss' : 'text-warning');
 
-        // Formatted date
         const d = new Date(t.date);
         const dateStr = d.toLocaleDateString('id-ID', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + 
                         d.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
@@ -2071,7 +2046,6 @@
       });
     }
 
-    // Chart Rendering
     function renderChart() {
       const canvas = document.getElementById('equityChart');
       const ctx = canvas.getContext('2d');
@@ -2095,7 +2069,6 @@
         return;
       }
 
-      // Filtered or all trades based on isMonthFilterActive
       const now = new Date("2026-10-08T15:30:00");
       const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
       const chartTrades = isMonthFilterActive 
@@ -2128,7 +2101,6 @@
         const getX = (index) => padX + (index / (points.length - 1 || 1)) * (width - padX * 2);
         const getY = (val) => height - padY - ((val - minEq) / (maxEq - minEq || 1)) * (height - padY * 2);
 
-        // Grid lines
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 1;
         for (let i = 0; i <= 4; i++) {
@@ -2145,7 +2117,6 @@
           ctx.fillText('$' + Math.round(yVal).toLocaleString(), padX - 8, y + 3);
         }
 
-        // Fill area gradient
         const areaGrad = ctx.createLinearGradient(0, padY, 0, height - padY);
         areaGrad.addColorStop(0, 'rgba(10, 132, 255, 0.35)');
         areaGrad.addColorStop(1, 'rgba(10, 132, 255, 0.0)');
@@ -2160,7 +2131,6 @@
         ctx.fillStyle = areaGrad;
         ctx.fill();
 
-        // Stroke line
         ctx.beginPath();
         points.forEach((p, idx) => {
           const x = getX(idx);
@@ -2175,7 +2145,6 @@
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // Draw dots
         points.forEach((p, idx) => {
           const x = getX(idx);
           const y = getY(p.equity);
@@ -2237,7 +2206,6 @@
       });
     }
 
-    // Date Filter Operations
     function handleDateSelect(val) {
       selectedDateFilter = val;
       document.getElementById('filterDateInput').value = val;
@@ -2283,7 +2251,6 @@
       renderTable();
     }
 
-    // Lot Size Calculator Logic
     function calculateLot() {
       const balance = parseFloat(document.getElementById('calcBalance').value) || 0;
       const riskPct = parseFloat(document.getElementById('calcRiskPct').value) || 0;
@@ -2297,7 +2264,6 @@
       document.getElementById('calcRiskAmount').innerText = `$${riskMoney.toFixed(2)}`;
     }
 
-    // Modal Operations
     function openNewTradeModal() {
       document.getElementById('tradeForm').reset();
       document.getElementById('editTradeId').value = '';
@@ -2312,17 +2278,6 @@
 
     function closeTradeModal() {
       document.getElementById('tradeModal').classList.remove('active');
-    }
-
-    function calculatePlannedRRR() {
-      const entry = parseFloat(document.getElementById('fEntry').value) || 0;
-      const sl = parseFloat(document.getElementById('fSL').value) || 0;
-      const tp = parseFloat(document.getElementById('fTP').value) || 0;
-
-      if (entry > 0 && sl > 0 && tp > 0) {
-        const risk = Math.abs(entry - sl);
-        const reward = Math.abs(tp - entry);
-      }
     }
 
     function calculatePnlAuto() {
@@ -2351,7 +2306,7 @@
       
       const newTrade = {
         id: id,
-        pair: document.getElementById('fPair').value.toUpperCase().trim(),
+        pair: document.getElementById('fPair').value,
         position: document.getElementById('fPosition').value,
         date: document.getElementById('fDate').value,
         lot: parseFloat(document.getElementById('fLot').value) || 0.01,
@@ -2370,10 +2325,10 @@
       const existingIdx = trades.findIndex(t => t.id === id);
       if (existingIdx >= 0) {
         trades[existingIdx] = newTrade;
-        showToast('Transaksi berhasil diperbarui');
+        showToast('Transaksi diperbarui');
       } else {
         trades.unshift(newTrade);
-        showToast('Transaksi baru berhasil dicatat');
+        showToast('Transaksi disimpan');
       }
 
       saveToStorage();
@@ -2382,7 +2337,7 @@
     }
 
     function deleteTrade(id) {
-      if (confirm('Yakin ingin menghapus transaksi ini dari jurnal?')) {
+      if (confirm('Yakin ingin menghapus transaksi ini?')) {
         trades = trades.filter(t => t.id !== id);
         saveToStorage();
         renderAll();
@@ -2390,7 +2345,6 @@
       }
     }
 
-    // Detail View Modal
     function openDetailModal(id) {
       const t = trades.find(item => item.id === id);
       if (!t) return;
@@ -2405,7 +2359,7 @@
       const grid = document.getElementById('detGrid');
       grid.innerHTML = `
         <div class="detail-item">
-          <div class="detail-title">Hasil P&L</div>
+          <div class="detail-title">Hasil Laba/Rugi</div>
           <div class="detail-val ${pnlClass}">${pnlNum >= 0 ? '+$' : '-$'}${Math.abs(pnlNum).toFixed(2)} (${t.pips} Pips)</div>
         </div>
         <div class="detail-item">
@@ -2421,16 +2375,16 @@
           <div class="detail-val">SL: ${t.sl} | TP: ${t.tp || '-'}</div>
         </div>
         <div class="detail-item">
-          <div class="detail-title">Strategi / Setup</div>
+          <div class="detail-title">Setup / Strategi</div>
           <div class="detail-val">${t.strategy}</div>
         </div>
         <div class="detail-item">
-          <div class="detail-title">Kondisi Mental & Psikologi</div>
+          <div class="detail-title">Kondisi Emosi / Psikologi</div>
           <div class="detail-val">${t.emotion || '-'}</div>
         </div>
       `;
 
-      document.getElementById('detNotes').innerText = t.notes || 'Tidak ada catatan tambahan untuk transaksi ini.';
+      document.getElementById('detNotes').innerText = t.notes || 'Tidak ada catatan tambahan.';
 
       const chartWrap = document.getElementById('detChartWrap');
       if (t.chartUrl) {
@@ -2452,7 +2406,6 @@
       document.getElementById('detailModal').classList.remove('active');
     }
 
-    // Export & Backup
     function exportCSV() {
       if (trades.length === 0) {
         alert('Tidak ada data transaksi untuk diekspor.');
@@ -2481,7 +2434,7 @@
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `forex_trading_journal_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `jurnal_trading_forex_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -2492,11 +2445,11 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `aurafx_backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `cadangan_jurnal_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      showToast('Cadangan JSON berhasil diunduh');
+      showToast('Cadangan data berhasil diunduh');
     }
 
     function showToast(msg) {
