@@ -73,7 +73,7 @@
       position: absolute;
       border-radius: 50%;
       filter: blur(90px);
-      opacity: 0.4;
+      opacity: 0.38;
       animation: floatOrb 22s infinite alternate ease-in-out;
     }
 
@@ -147,7 +147,9 @@
       justify-content: space-between;
       align-items: center;
       padding: 16px 24px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 14px;
     }
 
     .brand-group {
@@ -233,10 +235,77 @@
       box-shadow: 0 6px 18px rgba(48, 209, 88, 0.25);
     }
 
+    /* ==========================================================================
+       PANEL PENGATURAN MODAL & MATA UANG AKUN (TERPISAH DARI CATAT TRANSAKSI)
+       ========================================================================== */
+    .capital-settings-card {
+      padding: 18px 24px;
+      margin-bottom: 22px;
+      background: linear-gradient(135deg, rgba(10, 132, 255, 0.08) 0%, rgba(94, 92, 230, 0.05) 100%);
+      border: 1px solid rgba(10, 132, 255, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .capital-config-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .config-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .config-field label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+    }
+
+    .capital-overview-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cap-stat-box {
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      .cap-stat-box {
+        text-align: left;
+      }
+    }
+
+    .cap-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+      margin-bottom: 3px;
+    }
+
+    .cap-stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
     /* 30-Day Win & Performance Card */
     .monthly-card {
       padding: 20px 24px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       background: linear-gradient(135deg, rgba(48, 209, 88, 0.08) 0%, rgba(10, 132, 255, 0.06) 100%);
       border: 1px solid rgba(48, 209, 88, 0.25);
     }
@@ -413,7 +482,7 @@
     }
 
     .kpi-value {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 700;
       letter-spacing: -0.8px;
       margin-bottom: 6px;
@@ -784,6 +853,21 @@
       border: 1px solid rgba(255, 69, 58, 0.3);
     }
 
+    .badge-win {
+      background: var(--profit-green-soft);
+      color: var(--profit-green);
+    }
+
+    .badge-loss {
+      background: var(--loss-red-soft);
+      color: var(--loss-red);
+    }
+
+    .badge-be {
+      background: var(--warning-soft);
+      color: var(--warning-amber);
+    }
+
     .badge-tag {
       background: rgba(255, 255, 255, 0.07);
       color: var(--text-secondary);
@@ -1011,7 +1095,7 @@
 
   <div class="app-container">
     
-    <!-- Clean Header: Cukup tulisan Jurnal Trading Forex -->
+    <!-- Clean Header: Jurnal Trading Forex -->
     <header class="glass-card">
       <div class="brand-group">
         <div class="brand-icon">
@@ -1047,6 +1131,52 @@
         </button>
       </div>
     </header>
+
+    <!-- FITUR BARU: PANEL PENGATURAN MODAL & MATA UANG AKUN (TERPISAH DARI CATAT TRANSAKSI) -->
+    <section class="glass-card capital-settings-card">
+      <div class="capital-config-controls">
+        <!-- Pilihan Mata Uang Banyak -->
+        <div class="config-field">
+          <label for="currencySelect">Mata Uang Akun</label>
+          <select id="currencySelect" class="glass-input" style="width: auto; min-width: 170px;" onchange="handleCurrencyChange(this.value)">
+            <option value="USD">USD ($) — Dolar AS</option>
+            <option value="IDR">IDR (Rp) — Rupiah Indonesia</option>
+            <option value="USC">USC (¢) — Akun Sen (US Cent)</option>
+            <option value="EUR">EUR (€) — Euro</option>
+            <option value="GBP">GBP (£) — Poundsterling</option>
+            <option value="JPY">JPY (¥) — Yen Jepang</option>
+            <option value="AUD">AUD (A$) — Dolar Australia</option>
+            <option value="SGD">SGD (S$) — Dolar Singapura</option>
+            <option value="MYR">MYR (RM) — Ringgit Malaysia</option>
+          </select>
+        </div>
+
+        <!-- Input Modal Awal -->
+        <div class="config-field">
+          <label for="initialCapitalInput">Modal Awal Akun</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="number" id="initialCapitalInput" class="glass-input" style="width: 150px;" value="10000" step="any" onchange="handleCapitalChange(this.value)">
+            <button class="btn-action" style="padding: 6px 12px; font-size: 11.5px;" onclick="applyCapitalChange()">Simpan Modal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ringkasan Live Ekuitas / Saldo Berjalan (Hasil integrasi dengan transaksi) -->
+      <div class="capital-overview-group">
+        <div class="cap-stat-box">
+          <div class="cap-stat-label">Modal Awal</div>
+          <div class="cap-stat-val" id="dispInitialCap">$10,000.00</div>
+        </div>
+        <div class="cap-stat-box">
+          <div class="cap-stat-label">Total Laba/Rugi</div>
+          <div class="cap-stat-val text-profit" id="dispTotalPnl">+$0.00</div>
+        </div>
+        <div class="cap-stat-box" style="border-left: 1px solid var(--glass-border); padding-left: 20px;">
+          <div class="cap-stat-label" style="color: var(--accent-cyan);">Saldo Berjalan (Ekuitas)</div>
+          <div class="cap-stat-val" id="dispCurrentEquity" style="color: #fff; font-size: 24px;">$10,000.00</div>
+        </div>
+      </div>
+    </section>
 
     <!-- Ringkasan Kemenangan 1 Bulan Terakhir -->
     <section class="glass-card monthly-card">
@@ -1162,7 +1292,7 @@
           </div>
         </div>
         <div class="kpi-value" id="kpiAvgRRR">1:0.00</div>
-        <div class="kpi-subtext" id="kpiAvgWinLoss">Win: +$0 | Loss: -$0</div>
+        <div class="kpi-subtext" id="kpiAvgWinLoss">Win: $0 | Loss: -$0</div>
       </div>
     </section>
 
@@ -1190,7 +1320,7 @@
         </div>
       </div>
 
-      <!-- Kalkulator Risiko -->
+      <!-- Kalkulator Risiko Terintegrasi dengan Modal & Mata Uang -->
       <div class="side-panel">
         <div class="glass-card calc-card">
           <div class="panel-title">
@@ -1211,7 +1341,7 @@
 
           <div class="calc-input-group">
             <div class="input-field-compact">
-              <label>Modal Akun ($)</label>
+              <label id="lblCalcBalance">Modal Akun</label>
               <input type="number" id="calcBalance" class="glass-input" value="10000" oninput="calculateLot()">
             </div>
             <div class="input-field-compact">
@@ -1223,7 +1353,7 @@
               <input type="number" id="calcSlPips" class="glass-input" value="25" oninput="calculateLot()">
             </div>
             <div class="input-field-compact">
-              <label>Nilai Pip / Lot ($)</label>
+              <label id="lblPipVal">Nilai Pip / Lot</label>
               <input type="number" id="calcPipVal" class="glass-input" value="10" oninput="calculateLot()">
             </div>
           </div>
@@ -1234,7 +1364,7 @@
               <div class="calc-result-value" id="calcRecLot">0.40 Lot</div>
             </div>
             <div style="text-align: right;">
-              <div class="calc-result-title">Nilai Risiko ($)</div>
+              <div class="calc-result-title">Nilai Risiko</div>
               <div style="font-size: 15px; font-weight: 600; color: #fff;" id="calcRiskAmount">$100.00</div>
             </div>
           </div>
@@ -1364,7 +1494,7 @@
 
   </div>
 
-  <!-- Modal: Catat / Edit Transaksi -->
+  <!-- Modal: Catat / Edit Transaksi (Terpisah dari pengaturan modal awal) -->
   <div class="modal-overlay" id="tradeModal">
     <div class="glass-card modal-card">
       <div class="modal-header">
@@ -1455,7 +1585,7 @@
           </div>
 
           <div class="form-group">
-            <label>Laba / Rugi Bersih ($)</label>
+            <label id="lblFormPnl">Laba / Rugi Bersih</label>
             <input type="number" id="fPnl" class="glass-input" step="any" required placeholder="+150 atau -50">
           </div>
 
@@ -1501,7 +1631,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn-action" onclick="closeTradeModal()">Batal</button>
-          <button type="submit" class="btn-action btn-primary">Simpan</button>
+          <button type="submit" class="btn-action btn-primary">Simpan Transaksi</button>
         </div>
       </form>
     </div>
@@ -1547,6 +1677,22 @@
 
   <!-- JavaScript App Logic -->
   <script>
+    // Konfigurasi Pilihan Mata Uang Lengkap
+    const CURRENCY_CONFIG = {
+      USD: { symbol: "$", code: "USD", decimals: 2, defaultPipVal: 10, defaultCap: 10000, name: "USD ($)" },
+      IDR: { symbol: "Rp ", code: "IDR", decimals: 0, defaultPipVal: 155000, defaultCap: 50000000, name: "IDR (Rp)" },
+      USC: { symbol: "¢", code: "USC", decimals: 2, defaultPipVal: 1000, defaultCap: 100000, name: "USC (¢)" },
+      EUR: { symbol: "€", code: "EUR", decimals: 2, defaultPipVal: 10, defaultCap: 10000, name: "EUR (€)" },
+      GBP: { symbol: "£", code: "GBP", decimals: 2, defaultPipVal: 8.5, defaultCap: 10000, name: "GBP (£)" },
+      JPY: { symbol: "¥", code: "JPY", decimals: 0, defaultPipVal: 1500, defaultCap: 1000000, name: "JPY (¥)" },
+      AUD: { symbol: "A$", code: "AUD", decimals: 2, defaultPipVal: 10, defaultCap: 10000, name: "AUD (A$)" },
+      SGD: { symbol: "S$", code: "SGD", decimals: 2, defaultPipVal: 13, defaultCap: 10000, name: "SGD (S$)" },
+      MYR: { symbol: "RM ", code: "MYR", decimals: 2, defaultPipVal: 45, defaultCap: 40000, name: "MYR (RM)" }
+    };
+
+    let currentCurrency = "USD";
+    let initialCapital = 10000;
+
     const initialTrades = [
       {
         id: "tr_1",
@@ -1686,7 +1832,6 @@
       }
     ];
 
-    const INITIAL_CAPITAL = 10000;
     let trades = [];
     let currentFilter = 'ALL';
     let currentSearch = '';
@@ -1694,12 +1839,92 @@
     let isMonthFilterActive = false;
     let chartMode = 'equity';
 
+    // Inisialisasi
     window.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
       loadTrades();
-      calculateLot();
+      updateCurrencyLabels();
       renderAll();
       initChartResize();
     });
+
+    // Format Uang Dinamis Mengikuti Pilihan Mata Uang
+    function formatMoney(amount, showSign = false) {
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      const num = parseFloat(amount) || 0;
+      const sign = num > 0 && showSign ? "+" : (num < 0 ? "-" : "");
+      const absVal = Math.abs(num);
+      
+      const formattedNum = absVal.toLocaleString('id-ID', {
+        minimumFractionDigits: cfg.decimals,
+        maximumFractionDigits: cfg.decimals
+      });
+
+      return `${sign}${cfg.symbol}${formattedNum}`;
+    }
+
+    // Manajemen Pengaturan Modal & Mata Uang
+    function loadSettings() {
+      const savedCurr = localStorage.getItem('aurafx_currency');
+      if (savedCurr && CURRENCY_CONFIG[savedCurr]) {
+        currentCurrency = savedCurr;
+      }
+      document.getElementById('currencySelect').value = currentCurrency;
+
+      const savedCap = localStorage.getItem('aurafx_initial_capital');
+      if (savedCap) {
+        initialCapital = parseFloat(savedCap) || 10000;
+      } else {
+        initialCapital = CURRENCY_CONFIG[currentCurrency].defaultCap;
+      }
+      document.getElementById('initialCapitalInput').value = initialCapital;
+    }
+
+    function saveSettings() {
+      localStorage.setItem('aurafx_currency', currentCurrency);
+      localStorage.setItem('aurafx_initial_capital', initialCapital);
+    }
+
+    function handleCurrencyChange(newCurr) {
+      if (!CURRENCY_CONFIG[newCurr]) return;
+      currentCurrency = newCurr;
+      
+      // Sesuaikan default pip value di kalkulator jika berganti mata uang
+      document.getElementById('calcPipVal').value = CURRENCY_CONFIG[newCurr].defaultPipVal;
+      
+      saveSettings();
+      updateCurrencyLabels();
+      renderAll();
+      showToast(`Mata uang diubah ke ${CURRENCY_CONFIG[newCurr].name}`);
+    }
+
+    function handleCapitalChange(val) {
+      const parsed = parseFloat(val);
+      if (parsed > 0) {
+        initialCapital = parsed;
+        saveSettings();
+        renderAll();
+      }
+    }
+
+    function applyCapitalChange() {
+      const val = parseFloat(document.getElementById('initialCapitalInput').value);
+      if (val > 0) {
+        initialCapital = val;
+        saveSettings();
+        renderAll();
+        showToast(`Modal awal diperbarui: ${formatMoney(initialCapital)}`);
+      } else {
+        alert('Masukkan nominal modal awal yang valid (lebih dari 0).');
+      }
+    }
+
+    function updateCurrencyLabels() {
+      const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG.USD;
+      document.getElementById('lblCalcBalance').innerText = `Modal Akun (${cfg.symbol.trim()})`;
+      document.getElementById('lblPipVal').innerText = `Nilai Pip / Lot (${cfg.symbol.trim()})`;
+      document.getElementById('lblFormPnl').innerText = `Laba / Rugi Bersih (${cfg.symbol.trim()})`;
+    }
 
     function loadTrades() {
       const stored = localStorage.getItem('aurafx_trades');
@@ -1725,6 +1950,7 @@
       return 'BE';
     }
 
+    // 1 Bulan Terakhir Analytics
     function updateMonthlyAnalytics() {
       const now = new Date("2026-10-08T15:30:00");
       const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
@@ -1771,26 +1997,30 @@
         ? (mWinAmount / mLossAmount).toFixed(2) 
         : (mWinAmount > 0 ? "99.9" : "0.00");
       
-      const mAvgWinVal = mWins > 0 ? (mWinAmount / mWins).toFixed(0) : "0";
-      const mAvgLossVal = mLosses > 0 ? (mLossAmount / mLosses).toFixed(0) : "0";
+      const mAvgWinVal = winsText(mWins > 0 ? mWinAmount / mWins : 0);
+      const mAvgLossVal = winsText(mLosses > 0 ? mLossAmount / mLosses : 0);
       const mAvgRRRVal = mValidRRR > 0 ? (mTotalRRR / mValidRRR).toFixed(2) : "0.00";
-      const mReturnPct = ((mTotalPnl / INITIAL_CAPITAL) * 100).toFixed(2);
+      const mReturnPct = ((mTotalPnl / initialCapital) * 100).toFixed(2);
 
       document.getElementById('mWinRate').innerText = `${mWinRateVal}%`;
       document.getElementById('mWinBreakdown').innerText = `${mWins} Menang • ${mLosses} Kalah • ${mBes} BE`;
 
       const mNetPnlEl = document.getElementById('mNetPnl');
-      mNetPnlEl.innerText = (mTotalPnl >= 0 ? "+$" : "-$") + Math.abs(mTotalPnl).toFixed(2);
+      mNetPnlEl.innerText = formatMoney(mTotalPnl, true);
       mNetPnlEl.className = 'm-stat-val ' + (mTotalPnl >= 0 ? 'text-profit' : 'text-loss');
-      document.getElementById('mReturn').innerText = `${mReturnPct >= 0 ? '+' : ''}${mReturnPct}% Return`;
+      document.getElementById('mReturn').innerText = `${mReturnPct >= 0 ? '+' : ''}${mReturnPct}% Return on Capital`;
 
       document.getElementById('mProfitFactor').innerText = mProfitFactorVal;
-      document.getElementById('mAvgWinLoss').innerText = `Win: +$${mAvgWinVal} | Loss: -$${mAvgLossVal}`;
+      document.getElementById('mAvgWinLoss').innerText = `Win: +${mAvgWinVal} | Loss: -${mAvgLossVal}`;
 
       document.getElementById('mAvgRRR').innerText = `1:${mAvgRRRVal}`;
       document.getElementById('mTotalTrades').innerText = `${totalMTrades} Transaksi`;
 
       renderActivityStrip(now);
+    }
+
+    function winsText(val) {
+      return formatMoney(val, false);
     }
 
     function renderActivityStrip(currentDate) {
@@ -1827,7 +2057,7 @@
           else indicatorClass = 'be';
         }
 
-        pill.title = `${dateISO}: ${dayTradesCount > 0 ? `${dayTradesCount} transaksi (Laba/Rugi: ${dayNetPnl >= 0 ? '+' : ''}$${dayNetPnl.toFixed(2)})` : 'Tidak ada transaksi'}`;
+        pill.title = `${dateISO}: ${dayTradesCount > 0 ? `${dayTradesCount} transaksi (Laba/Rugi: ${formatMoney(dayNetPnl, true)})` : 'Tidak ada transaksi'}`;
         
         pill.onclick = () => {
           handleDateSelect(dateISO);
@@ -1859,6 +2089,7 @@
       renderAll();
     }
 
+    // UPDATE SEMUA KPI & SALDO BERJALAN TERINTEGRASI DENGAN MODAL AWAL & TRANSAKSI
     function updateKPIs() {
       const totalTrades = trades.length;
       let totalPnl = 0;
@@ -1892,22 +2123,37 @@
         }
       });
 
+      // Hitung Saldo Berjalan (Live Equity) = Modal Awal + Total Laba/Rugi
+      const currentEquity = initialCapital + totalPnl;
+      const returnPct = initialCapital > 0 ? ((totalPnl / initialCapital) * 100).toFixed(2) : "0.00";
+
+      // 1. Update Panel Pengaturan Modal & Live Overview
+      document.getElementById('dispInitialCap').innerText = formatMoney(initialCapital);
+      
+      const dispTotalPnl = document.getElementById('dispTotalPnl');
+      dispTotalPnl.innerText = formatMoney(totalPnl, true);
+      dispTotalPnl.className = 'cap-stat-val ' + (totalPnl >= 0 ? 'text-profit' : 'text-loss');
+
+      const dispCurrentEquity = document.getElementById('dispCurrentEquity');
+      dispCurrentEquity.innerText = formatMoney(currentEquity);
+      dispCurrentEquity.className = 'cap-stat-val ' + (currentEquity >= initialCapital ? 'text-profit' : 'text-loss');
+
+      // 2. Update KPI Grid
+      const kpiNetPnl = document.getElementById('kpiNetPnl');
+      kpiNetPnl.innerText = formatMoney(totalPnl, true);
+      kpiNetPnl.className = 'kpi-value ' + (totalPnl >= 0 ? 'text-profit' : 'text-loss');
+
+      const kpiReturn = document.getElementById('kpiReturn');
+      kpiReturn.innerText = `${returnPct >= 0 ? '+' : ''}${returnPct}% Return on Capital (Ekuitas: ${formatMoney(currentEquity)})`;
+
       const winRate = totalTrades > 0 ? ((wins / (totalTrades)) * 100).toFixed(1) : "0.0";
       const profitFactor = totalLossAmount > 0 
         ? (totalWinAmount / totalLossAmount).toFixed(2) 
         : (totalWinAmount > 0 ? "99.9" : "0.00");
       
-      const avgWin = wins > 0 ? (totalWinAmount / wins).toFixed(0) : "0";
-      const avgLoss = losses > 0 ? (totalLossAmount / losses).toFixed(0) : "0";
+      const avgWin = wins > 0 ? (totalWinAmount / wins) : 0;
+      const avgLoss = losses > 0 ? (totalLossAmount / losses) : 0;
       const avgRRRVal = validRRRCount > 0 ? (totalRRR / validRRRCount).toFixed(2) : "0.00";
-      const returnPct = ((totalPnl / INITIAL_CAPITAL) * 100).toFixed(2);
-
-      const kpiNetPnl = document.getElementById('kpiNetPnl');
-      kpiNetPnl.innerText = (totalPnl >= 0 ? "+$" : "-$") + Math.abs(totalPnl).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      kpiNetPnl.className = 'kpi-value ' + (totalPnl >= 0 ? 'text-profit' : 'text-loss');
-
-      const kpiReturn = document.getElementById('kpiReturn');
-      kpiReturn.innerText = `${returnPct >= 0 ? '+' : ''}${returnPct}% Return on Equity`;
 
       document.getElementById('kpiWinRate').innerText = `${winRate}%`;
       document.getElementById('kpiWinCount').innerText = `${wins} Menang • ${losses} Kalah • ${bes} BE`;
@@ -1916,7 +2162,7 @@
       document.getElementById('kpiTotalTrades').innerText = `Total ${totalTrades} Transaksi`;
 
       document.getElementById('kpiAvgRRR').innerText = `1:${avgRRRVal}`;
-      document.getElementById('kpiAvgWinLoss').innerText = `Win: +$${avgWin} | Loss: -$${avgLoss}`;
+      document.getElementById('kpiAvgWinLoss').innerText = `Win: +${formatMoney(avgWin)} | Loss: -${formatMoney(avgLoss)}`;
 
       const winPctBar = totalTrades > 0 ? (wins / totalTrades) * 100 : 0;
       const lossPctBar = totalTrades > 0 ? (losses / totalTrades) * 100 : 0;
@@ -1930,6 +2176,12 @@
       document.getElementById('lblWin').innerText = `Menang: ${wins}`;
       document.getElementById('lblLoss').innerText = `Kalah: ${losses}`;
       document.getElementById('lblBe').innerText = `BE: ${bes}`;
+
+      // 3. Sinkronkan Modal di Kalkulator Risiko dengan Saldo Berjalan (atau Modal Awal)
+      if (document.activeElement !== document.getElementById('calcBalance')) {
+        document.getElementById('calcBalance').value = currentEquity.toFixed(CURRENCY_CONFIG[currentCurrency].decimals);
+      }
+      calculateLot();
     }
 
     function renderTable() {
@@ -1999,7 +2251,7 @@
         const tr = document.createElement('tr');
         const res = getTradeResult(t.pnl);
         const pnlNum = parseFloat(t.pnl) || 0;
-        const pnlFormatted = (pnlNum >= 0 ? '+$' : '-$') + Math.abs(pnlNum).toFixed(2);
+        const pnlFormatted = formatMoney(pnlNum, true);
         const pnlClass = res === 'WIN' ? 'text-profit' : (res === 'LOSS' ? 'text-loss' : 'text-warning');
 
         const d = new Date(t.date);
@@ -2046,6 +2298,7 @@
       });
     }
 
+    // KURVA PERTUMBUHAN EKUITAS DIMULAI DARI MODAL AWAL
     function renderChart() {
       const canvas = document.getElementById('equityChart');
       const ctx = canvas.getContext('2d');
@@ -2061,14 +2314,6 @@
 
       ctx.clearRect(0, 0, width, height);
 
-      if (trades.length === 0) {
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.font = '13px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Belum ada data transaksi untuk kurva ekuitas', width / 2, height / 2);
-        return;
-      }
-
       const now = new Date("2026-10-08T15:30:00");
       const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
       const chartTrades = isMonthFilterActive 
@@ -2078,8 +2323,9 @@
       const sorted = [...chartTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
 
       if (chartMode === 'equity') {
-        let runningEquity = INITIAL_CAPITAL;
-        const points = [{ xLabel: 'Start', equity: runningEquity, pnl: 0, date: '' }];
+        // Dimulai tepat dari Modal Awal (initialCapital)
+        let runningEquity = initialCapital;
+        const points = [{ xLabel: 'Mulai', equity: runningEquity, pnl: 0, date: '' }];
         
         sorted.forEach((t, idx) => {
           runningEquity += (parseFloat(t.pnl) || 0);
@@ -2095,12 +2341,13 @@
         const equities = points.map(p => p.equity);
         const minEq = Math.min(...equities) * 0.98;
         const maxEq = Math.max(...equities) * 1.02;
-        const padX = 40;
+        const padX = 55;
         const padY = 30;
 
         const getX = (index) => padX + (index / (points.length - 1 || 1)) * (width - padX * 2);
         const getY = (val) => height - padY - ((val - minEq) / (maxEq - minEq || 1)) * (height - padY * 2);
 
+        // Grid lines & Sumbu Y dengan Simbol Mata Uang
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 1;
         for (let i = 0; i <= 4; i++) {
@@ -2111,10 +2358,10 @@
           ctx.lineTo(width - padX, y);
           ctx.stroke();
 
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
           ctx.font = '10px -apple-system, sans-serif';
           ctx.textAlign = 'right';
-          ctx.fillText('$' + Math.round(yVal).toLocaleString(), padX - 8, y + 3);
+          ctx.fillText(formatMoney(Math.round(yVal)), padX - 8, y + 3);
         }
 
         const areaGrad = ctx.createLinearGradient(0, padY, 0, height - padY);
@@ -2158,7 +2405,7 @@
         });
 
       } else {
-        const padX = 40;
+        const padX = 55;
         const padY = 30;
         const pnls = sorted.map(t => parseFloat(t.pnl) || 0);
         const maxAbs = Math.max(...pnls.map(Math.abs), 100) * 1.15;
@@ -2251,6 +2498,7 @@
       renderTable();
     }
 
+    // Kalkulator Ukuran Lot dengan sinkronisasi Mata Uang
     function calculateLot() {
       const balance = parseFloat(document.getElementById('calcBalance').value) || 0;
       const riskPct = parseFloat(document.getElementById('calcRiskPct').value) || 0;
@@ -2261,7 +2509,7 @@
       const recLot = riskMoney / (slPips * pipVal);
 
       document.getElementById('calcRecLot').innerText = `${recLot.toFixed(2)} Lot`;
-      document.getElementById('calcRiskAmount').innerText = `$${riskMoney.toFixed(2)}`;
+      document.getElementById('calcRiskAmount').innerText = formatMoney(riskMoney);
     }
 
     function openNewTradeModal() {
@@ -2300,6 +2548,7 @@
       }
     }
 
+    // SIMPAN TRANSAKSI (OTOMATIS MEMPENGARUHI SALDO BERJALAN & MODAL)
     function saveTrade(e) {
       e.preventDefault();
       const id = document.getElementById('editTradeId').value || 'tr_' + Date.now();
@@ -2325,10 +2574,10 @@
       const existingIdx = trades.findIndex(t => t.id === id);
       if (existingIdx >= 0) {
         trades[existingIdx] = newTrade;
-        showToast('Transaksi diperbarui');
+        showToast('Transaksi diperbarui (saldo disesuaikan)');
       } else {
         trades.unshift(newTrade);
-        showToast('Transaksi disimpan');
+        showToast('Transaksi disimpan (saldo disesuaikan)');
       }
 
       saveToStorage();
@@ -2337,11 +2586,11 @@
     }
 
     function deleteTrade(id) {
-      if (confirm('Yakin ingin menghapus transaksi ini?')) {
+      if (confirm('Yakin ingin menghapus transaksi ini? Saldo berjalan akan disesuaikan kembali.')) {
         trades = trades.filter(t => t.id !== id);
         saveToStorage();
         renderAll();
-        showToast('Transaksi dihapus');
+        showToast('Transaksi dihapus (saldo disesuaikan)');
       }
     }
 
@@ -2360,7 +2609,7 @@
       grid.innerHTML = `
         <div class="detail-item">
           <div class="detail-title">Hasil Laba/Rugi</div>
-          <div class="detail-val ${pnlClass}">${pnlNum >= 0 ? '+$' : '-$'}${Math.abs(pnlNum).toFixed(2)} (${t.pips} Pips)</div>
+          <div class="detail-val ${pnlClass}">${formatMoney(pnlNum, true)} (${t.pips} Pips)</div>
         </div>
         <div class="detail-item">
           <div class="detail-title">Ukuran Posisi</div>
@@ -2412,7 +2661,7 @@
         return;
       }
 
-      const headers = ["ID", "Tanggal", "Pair", "Posisi", "Lot", "Entry", "Exit", "StopLoss", "TakeProfit", "PnL", "Pips", "Strategi", "Emosi", "Catatan"];
+      const headers = ["ID", "Tanggal", "Pair", "Posisi", "Lot", "Entry", "Exit", "StopLoss", "TakeProfit", `PnL (${currentCurrency})`, "Pips", "Strategi", "Emosi", "Catatan"];
       const rows = trades.map(t => [
         t.id,
         t.date,
@@ -2434,7 +2683,7 @@
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `jurnal_trading_forex_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `jurnal_trading_forex_${currentCurrency}_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -2442,10 +2691,16 @@
     }
 
     function backupJSON() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades, null, 2));
+      const backupData = {
+        currency: currentCurrency,
+        initialCapital: initialCapital,
+        exportDate: new Date().toISOString(),
+        trades: trades
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `cadangan_jurnal_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `cadangan_jurnal_${currentCurrency}_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
