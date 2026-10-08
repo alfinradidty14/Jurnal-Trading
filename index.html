@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraFx — Apple Liquid Forex Trading Journal</title>
+  <style>
+    /* ==========================================================================
+       AuraFx Apple Liquid Display Design System (iOS / macOS Glassmorphism)
+       ========================================================================== */
+    :root {
+      --bg-dark: #070913;
+      --glass-surface: rgba(255, 255, 255, 0.05);
+      --glass-surface-hover: rgba(255, 255, 255, 0.08);
+      --glass-surface-active: rgba(255, 255, 255, 0.12);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-subtle: rgba(255, 255, 255, 0.06);
+      --glass-highlight: rgba(255, 255, 255, 0.2);
+      
+      --accent-blue: #0A84FF;
+      --accent-cyan: #30B0C7;
+      --accent-indigo: #5E5CE6;
+      --accent-purple: #BF5AF2;
+      
+      --profit-green: #30D158;
+      --profit-green-soft: rgba(48, 209, 88, 0.15);
+      --profit-glow: rgba(48, 209, 88, 0.3);
+      
+      --loss-red: #FF453A;
+      --loss-red-soft: rgba(255, 69, 58, 0.15);
+      --loss-glow: rgba(255, 69, 58, 0.3);
+      
+      --warning-amber: #FFD60A;
+      --warning-soft: rgba(255, 214, 10, 0.15);
+      
+      --text-primary: #FFFFFF;
+      --text-secondary: rgba(235, 235, 245, 0.65);
+      --text-tertiary: rgba(235, 235, 245, 0.38);
+      
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 30px;
+      --shadow-liquid: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      --shadow-glow: 0 0 30px rgba(10, 132, 255, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      padding-bottom: 60px;
+    }
+
+    /* Ambient Liquid Glowing Orbs */
+    .liquid-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.45;
+      animation: floatOrb 22s infinite alternate ease-in-out;
+    }
+
+    .orb-1 {
+      width: 550px;
+      height: 550px;
+      top: -120px;
+      left: -100px;
+      background: radial-gradient(circle, #0A84FF 0%, rgba(10, 132, 255, 0) 70%);
+    }
+
+    .orb-2 {
+      width: 600px;
+      height: 600px;
+      top: 30%;
+      right: -150px;
+      background: radial-gradient(circle, #5E5CE6 0%, rgba(94, 92, 230, 0) 70%);
+      animation-delay: -7s;
+      animation-duration: 26s;
+    }
+
+    .orb-3 {
+      width: 480px;
+      height: 480px;
+      bottom: -100px;
+      left: 20%;
+      background: radial-gradient(circle, #30D158 0%, rgba(48, 209, 88, 0) 70%);
+      opacity: 0.25;
+      animation-delay: -14s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.08); }
+      100% { transform: translate(-40px, 70px) scale(0.95); }
+    }
+
+    /* Layout Containers */
+    .app-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* Glass Panels */
+    .liquid-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-liquid);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .liquid-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      pointer-events: none;
+    }
+
+    /* Header & Navigation */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      margin-bottom: 28px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0A84FF, #5E5CE6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(10, 132, 255, 0.4);
+    }
+
+    .brand-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .brand-title h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      color: var(--text-primary);
+    }
+
+    .brand-title p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 0.2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Liquid Buttons */
+    .liquid-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 980px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-surface);
+      color: var(--text-primary);
+      cursor: pointer;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .liquid-btn:hover {
+      background: var(--glass-surface-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1.5px);
+    }
+
+    .liquid-btn:active {
+      transform: translateY(0.5px) scale(0.98);
+      background: var(--glass-surface-active);
+    }
+
+    .liquid-btn-primary {
+      background: linear-gradient(135deg, #0A84FF, #0066CC);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 24px rgba(10, 132, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .liquid-btn-primary:hover {
+      background: linear-gradient(135deg, #2094FF, #0A75E5);
+      box-shadow: 0 10px 28px rgba(10, 132, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    /* KPI Summary Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .kpi-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-subtext {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .text-profit { color: var(--profit-green) !important; }
+    .text-loss { color: var(--loss-red) !important; }
+    .text-warning { color: var(--warning-amber) !important; }
+
+    /* Main Content Layout */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Chart Section */
+    .chart-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Segmented Control (Apple Style) */
+    .segmented-control {
+      display: inline-flex;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 980px;
+      padding: 3px;
+      border: 1px solid var(--glass-border-subtle);
+    }
+
+    .segment-btn {
+      padding: 6px 14px;
+      border-radius: 980px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .segment-btn.active {
+      background: var(--glass-surface-active);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Chart Tooltip */
+    .chart-tooltip {
+      position: absolute;
+      display: none;
+      pointer-events: none;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.15s ease;
+    }
+
+    /* Quick Calculator & Distribution Panel */
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .calc-card {
+      padding: 22px;
+    }
+
+    .calc-input-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .input-field-compact label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+
+    .glass-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .glass-input:focus {
+      border-color: var(--accent-blue);
+      background: rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+    }
+
+    .calc-result-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(10, 132, 255, 0.1);
+      border: 1px solid rgba(10, 132, 255, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .calc-result-title {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .calc-result-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    /* Trade Performance Distribution */
+    .distrib-bar {
+      height: 8px;
+      border-radius: 980px;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      overflow: hidden;
+      margin: 12px 0 16px 0;
+    }
+
+    .distrib-fill-win { background: var(--profit-green); height: 100%; transition: width 0.4s; }
+    .distrib-fill-loss { background: var(--loss-red); height: 100%; transition: width 0.4s; }
+    .distrib-fill-be { background: var(--warning-amber); height: 100%; transition: width 0.4s; }
+
+    .distrib-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .distrib-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .distrib-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Trade List Section */
+    .trades-section {
+      padding: 24px;
+    }
+
+    .table-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      min-width: 260px;
+    }
+
+    .search-wrapper input {
+      padding-left: 36px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      fill: var(--text-tertiary);
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 980px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border-subtle);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .filter-pill.active {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+    }
+
+    /* Glass Table */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    thead th {
+      padding: 12px 16px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--glass-border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--glass-border-subtle);
+      transition: background 0.18s ease;
+      cursor: pointer;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 980px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-buy {
+      background: rgba(48, 209, 88, 0.16);
+      color: var(--profit-green);
+      border: 1px solid rgba(48, 209, 88, 0.3);
+    }
+
+    .badge-sell {
+      background: rgba(255, 69, 58, 0.16);
+      color: var(--loss-red);
+      border: 1px solid rgba(255, 69, 58, 0.3);
+    }
+
+    .badge-win {
+      background: var(--profit-green-soft);
+      color: var(--profit-green);
+    }
+
+    .badge-loss {
+      background: var(--loss-red-soft);
+      color: var(--loss-red);
+    }
+
+    .badge-be {
+      background: var(--warning-soft);
+      color: var(--warning-amber);
+    }
+
+    .badge-tag {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-secondary);
+      border: 1px solid var(--glass-border-subtle);
+      font-weight: 500;
+    }
+
+    .action-btn-sm {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .action-btn-sm:hover {
+      color: var(--loss-red);
+      background: rgba(255, 69, 58, 0.15);
+    }
+
+    /* Liquid Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      background: rgba(18, 22, 38, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--glass-border-subtle);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group-full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    select.glass-input {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px top 50%;
+      background-size: 9px auto;
+      padding-right: 32px;
+    }
+
+    select.glass-input option {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    textarea.glass-input {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--glass-border-subtle);
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--text-tertiary);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      stroke: var(--text-tertiary);
+    }
+
+    /* Notification Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 12px 20px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Detail View Modal Elements */
+    .trade-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .detail-item {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border-subtle);
+    }
+
+    .detail-title {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .detail-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Liquid Glow Elements -->
+  <div class="liquid-mesh">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="liquid-card">
+      <div class="brand-group">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h1>AuraFx Journal</h1>
+          <p>Apple Liquid Display • Forex Performance & Analytics</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="liquid-btn" onclick="exportCSV()" title="Ekspor data ke CSV/Excel">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Export CSV
+        </button>
+        <button class="liquid-btn" onclick="backupJSON()" title="Cadangkan Data">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Backup
+        </button>
+        <button class="liquid-btn liquid-btn-primary" onclick="openNewTradeModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Catat Trade
+        </button>
+      </div>
+    </header>
+
+    <!-- Key Performance Indicators (KPIs) -->
+    <section class="kpi-grid">
+      <div class="liquid-card kpi-card">
+        <div class="kpi-label">
+          <span>Net Profit & Loss</span>
+          <div class="kpi-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpiNetPnl">$0.00</div>
+        <div class="kpi-subtext" id="kpiReturn">0.00% Return on Equity</div>
+      </div>
+
+      <div class="liquid-card kpi-card">
+        <div class="kpi-label">
+          <span>Win Rate</span>
+          <div class="kpi-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpiWinRate">0.0%</div>
+        <div class="kpi-subtext" id="kpiWinCount">0 Menang • 0 Kalah • 0 BE</div>
+      </div>
+
+      <div class="liquid-card kpi-card">
+        <div class="kpi-label">
+          <span>Profit Factor</span>
+          <div class="kpi-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpiProfitFactor">0.00</div>
+        <div class="kpi-subtext" id="kpiTotalTrades">Total 0 Transaksi</div>
+      </div>
+
+      <div class="liquid-card kpi-card">
+        <div class="kpi-label">
+          <span>Avg Win / Loss & RRR</span>
+          <div class="kpi-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpiAvgRRR">1:0.00</div>
+        <div class="kpi-subtext" id="kpiAvgWinLoss">Win: $0 | Loss: $0</div>
+      </div>
+    </section>
+
+    <!-- Dashboard Analytics & Quick Calculator -->
+    <div class="dashboard-layout">
+      
+      <!-- Chart Panel -->
+      <div class="liquid-card chart-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v18h18"/>
+              <path d="m19 9-5 5-4-4-3 3"/>
+            </svg>
+            Kurva Ekuitas & Pertumbuhan Saldo
+          </div>
+          <div class="segmented-control">
+            <button class="segment-btn active" id="btnEquityCurve" onclick="switchChartMode('equity')">Equity Curve</button>
+            <button class="segment-btn" id="btnPnlBars" onclick="switchChartMode('bars')">PnL per Trade</button>
+          </div>
+        </div>
+
+        <div class="chart-container" id="chartWrapper">
+          <canvas id="equityChart"></canvas>
+          <div class="chart-tooltip" id="chartTooltip"></div>
+        </div>
+      </div>
+
+      <!-- Side Risk Calculator & Win Distribution -->
+      <div class="side-panel">
+        <div class="liquid-card calc-card">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+              <line x1="8" y1="6" x2="16" y2="6"></line>
+              <line x1="16" y1="14" x2="16" y2="18"></line>
+              <path d="M16 10h.01"></path>
+              <path d="M12 10h.01"></path>
+              <path d="M8 10h.01"></path>
+              <path d="M12 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 18h.01"></path>
+              <path d="M8 18h.01"></path>
+            </svg>
+            Kalkulator Lot & Risiko
+          </div>
+
+          <div class="calc-input-group">
+            <div class="input-field-compact">
+              <label>Modal Akun ($)</label>
+              <input type="number" id="calcBalance" class="glass-input" value="10000" oninput="calculateLot()">
+            </div>
+            <div class="input-field-compact">
+              <label>Toleransi Risiko (%)</label>
+              <input type="number" id="calcRiskPct" class="glass-input" value="1.0" step="0.1" oninput="calculateLot()">
+            </div>
+            <div class="input-field-compact">
+              <label>Jarak SL (Pips)</label>
+              <input type="number" id="calcSlPips" class="glass-input" value="25" oninput="calculateLot()">
+            </div>
+            <div class="input-field-compact">
+              <label>Nilai Pip / Lot ($)</label>
+              <input type="number" id="calcPipVal" class="glass-input" value="10" oninput="calculateLot()">
+            </div>
+          </div>
+
+          <div class="calc-result-box">
+            <div>
+              <div class="calc-result-title">Rekomendasi Lot Size</div>
+              <div class="calc-result-value" id="calcRecLot">0.40 Lot</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="calc-result-title">Jumlah Risiko ($)</div>
+              <div style="font-size: 15px; font-weight: 600; color: #fff;" id="calcRiskAmount">$100.00</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">
+              <span>Rasio Hasil Transaksi</span>
+              <span id="distribPctWin">0% Win</span>
+            </div>
+            <div class="distrib-bar">
+              <div class="distrib-fill-win" id="distribWin" style="width: 50%;"></div>
+              <div class="distrib-fill-loss" id="distribLoss" style="width: 35%;"></div>
+              <div class="distrib-fill-be" id="distribBe" style="width: 15%;"></div>
+            </div>
+            <div class="distrib-stats">
+              <div class="distrib-item">
+                <span class="distrib-dot" style="background: var(--profit-green);"></span>
+                <span id="lblWin">Menang: 0</span>
+              </div>
+              <div class="distrib-item">
+                <span class="distrib-dot" style="background: var(--loss-red);"></span>
+                <span id="lblLoss">Kalah: 0</span>
+              </div>
+              <div class="distrib-item">
+                <span class="distrib-dot" style="background: var(--warning-amber);"></span>
+                <span id="lblBe">BE: 0</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Trade Log Table Section -->
+    <section class="liquid-card trades-section">
+      <div class="table-toolbar">
+        <div class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Riwayat Jurnal Transaksi
+        </div>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <div class="search-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" class="glass-input" placeholder="Cari pair, strategi, catatan..." oninput="handleSearchFilter()">
+          </div>
+
+          <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('ALL', this)">Semua</button>
+            <button class="filter-pill" onclick="setFilter('WIN', this)">Menang</button>
+            <button class="filter-pill" onclick="setFilter('LOSS', this)">Kalah</button>
+            <button class="filter-pill" onclick="setFilter('BE', this)">Break Even</button>
+            <button class="filter-pill" onclick="setFilter('BUY', this)">Buy</button>
+            <button class="filter-pill" onclick="setFilter('SELL', this)">Sell</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Pair / Aset</th>
+              <th>Posisi</th>
+              <th>Lot</th>
+              <th>Entry → Exit</th>
+              <th>SL / TP</th>
+              <th>Profit / Loss</th>
+              <th>RRR</th>
+              <th>Strategi & Emosi</th>
+              <th style="text-align: right;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tradeTableBody">
+            <!-- Dynamic Trades Injected Here -->
+          </tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <p>Belum ada data transaksi yang cocok dengan kriteria filter.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Modal: Tambah / Edit Trade -->
+  <div class="modal-overlay" id="tradeModal">
+    <div class="liquid-card modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Catat Transaksi Baru</h2>
+        <button class="modal-close" onclick="closeTradeModal()">&times;</button>
+      </div>
+
+      <form id="tradeForm" onsubmit="saveTrade(event)">
+        <input type="hidden" id="editTradeId">
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Pasangan Mata Uang (Pair)</label>
+            <input type="text" id="fPair" class="glass-input" required placeholder="Contoh: EUR/USD, XAU/USD">
+          </div>
+
+          <div class="form-group">
+            <label>Tipe Posisi</label>
+            <select id="fPosition" class="glass-input" required onchange="calculatePlannedRRR()">
+              <option value="BUY">BUY (Long)</option>
+              <option value="SELL">SELL (Short)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Tanggal & Waktu</label>
+            <input type="datetime-local" id="fDate" class="glass-input" required>
+          </div>
+
+          <div class="form-group">
+            <label>Ukuran Lot</label>
+            <input type="number" id="fLot" class="glass-input" step="0.01" value="0.10" required>
+          </div>
+
+          <div class="form-group">
+            <label>Harga Entry</label>
+            <input type="number" id="fEntry" class="glass-input" step="any" required placeholder="1.08500" oninput="calculatePlannedRRR()">
+          </div>
+
+          <div class="form-group">
+            <label>Harga Exit / Penutupan</label>
+            <input type="number" id="fExit" class="glass-input" step="any" required placeholder="1.08950" oninput="calculatePnlAuto()">
+          </div>
+
+          <div class="form-group">
+            <label>Stop Loss (SL)</label>
+            <input type="number" id="fSL" class="glass-input" step="any" required placeholder="1.08200" oninput="calculatePlannedRRR()">
+          </div>
+
+          <div class="form-group">
+            <label>Take Profit (TP)</label>
+            <input type="number" id="fTP" class="glass-input" step="any" placeholder="1.09200" oninput="calculatePlannedRRR()">
+          </div>
+
+          <div class="form-group">
+            <label>Profit / Loss Bersih ($)</label>
+            <input type="number" id="fPnl" class="glass-input" step="any" required placeholder="+150 atau -50">
+          </div>
+
+          <div class="form-group">
+            <label>Perolehan Pips (Opsional)</label>
+            <input type="number" id="fPips" class="glass-input" step="any" placeholder="+45 atau -25">
+          </div>
+
+          <div class="form-group">
+            <label>Setup / Strategi</label>
+            <select id="fStrategy" class="glass-input">
+              <option value="Breakout">Breakout & Retest</option>
+              <option value="Supply & Demand">Supply & Demand (SnD)</option>
+              <option value="SMC / ICT">SMC / ICT Order Block</option>
+              <option value="Trend Following">Trend Following (MA/Pullback)</option>
+              <option value="Reversal / SnR">Reversal & Key SnR</option>
+              <option value="News Trading">High-Impact News</option>
+              <option value="Lainnya">Strategi Lainnya</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Kondisi Psikologi / Emosi</label>
+            <select id="fEmotion" class="glass-input">
+              <option value="Disiplin & Tenang">Tenang & Mengikuti Rencana</option>
+              <option value="FOMO">FOMO (Takut Tertinggal)</option>
+              <option value="Ragu-ragu">Ragu-ragu / Telat Masuk</option>
+              <option value="Revenge Trading">Revenge Trading / Emosional</option>
+              <option value="Overconfident">Terlalu Percaya Diri</option>
+            </select>
+          </div>
+
+          <div class="form-group-full form-group">
+            <label>Link Screenshot Chart (TradingView / Image URL)</label>
+            <input type="url" id="fChartUrl" class="glass-input" placeholder="https://www.tradingview.com/x/...">
+          </div>
+
+          <div class="form-group-full form-group">
+            <label>Catatan & Evaluasi Transaksi</label>
+            <textarea id="fNotes" class="glass-input" placeholder="Apa alasan entry? Apakah aturan SL/TP ditaati? Evaluasi apa yang perlu diperbaiki..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="liquid-btn" onclick="closeTradeModal()">Batal</button>
+          <button type="submit" class="liquid-btn liquid-btn-primary">Simpan Transaksi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Detail View Trade -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="liquid-card modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="detTitle">Detail Transaksi</h2>
+        <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+      </div>
+
+      <div class="trade-detail-grid" id="detGrid"></div>
+
+      <div style="margin-top: 14px;">
+        <div class="detail-title">Catatan & Evaluasi</div>
+        <div id="detNotes" style="padding: 14px; background: rgba(0,0,0,0.3); border-radius: 12px; font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); border: 1px solid var(--glass-border-subtle);"></div>
+      </div>
+
+      <div id="detChartWrap" style="margin-top: 14px; display: none;">
+        <div class="detail-title">Tangkapan Layar Chart</div>
+        <a id="detChartLink" href="#" target="_blank" class="liquid-btn" style="width: 100%; justify-content: center; margin-top: 6px;">
+          Buka Screenshot TradingView ↗
+        </a>
+      </div>
+
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="liquid-btn" style="color: var(--loss-red);" id="detDeleteBtn">Hapus Transaksi</button>
+        <button type="button" class="liquid-btn liquid-btn-primary" onclick="closeDetailModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <span id="toastMsg">Pemberitahuan</span>
+  </div>
+
+  <!-- JavaScript App Logic -->
+  <script>
+    // Initial Default Data (Forex Real Sample Trades)
+    const initialTrades = [
+      {
+        id: "tr_1",
+        pair: "EUR/USD",
+        position: "BUY",
+        date: "2026-10-02T09:15",
+        lot: 0.20,
+        entry: 1.08250,
+        exit: 1.08850,
+        sl: 1.08000,
+        tp: 1.08900,
+        pnl: 120.00,
+        pips: 60.0,
+        strategy: "Breakout",
+        emotion: "Disiplin & Tenang",
+        chartUrl: "https://www.tradingview.com/x/demo1/",
+        notes: "Konfirmasi breakout level resistance Asia Session di London open. SL di bawah retest."
+      },
+      {
+        id: "tr_2",
+        pair: "GBP/JPY",
+        position: "SELL",
+        date: "2026-10-03T14:30",
+        lot: 0.15,
+        entry: 198.400,
+        exit: 198.950,
+        sl: 198.900,
+        tp: 197.200,
+        pnl: -55.00,
+        pips: -55.0,
+        strategy: "Reversal / SnR",
+        emotion: "FOMO",
+        chartUrl: "",
+        notes: "Masuk terlalu dini sebelum ada candle penolakan valid di supply zone h4."
+      },
+      {
+        id: "tr_3",
+        pair: "XAU/USD",
+        position: "BUY",
+        date: "2026-10-05T19:00",
+        lot: 0.10,
+        entry: 2645.20,
+        exit: 2668.50,
+        sl: 2638.00,
+        tp: 2670.00,
+        pnl: 233.00,
+        pips: 233.0,
+        strategy: "SMC / ICT",
+        emotion: "Disiplin & Tenang",
+        chartUrl: "https://www.tradingview.com/x/demo3/",
+        notes: "Mitigasi bullish order block di sesi New York setelah liquidity sweep di sesi London."
+      },
+      {
+        id: "tr_4",
+        pair: "USD/JPY",
+        position: "SELL",
+        date: "2026-10-06T10:00",
+        lot: 0.25,
+        entry: 148.800,
+        exit: 148.810,
+        sl: 149.200,
+        tp: 148.000,
+        pnl: 0.00,
+        pips: -1.0,
+        strategy: "Supply & Demand",
+        emotion: "Ragu-ragu",
+        chartUrl: "",
+        notes: "Harga sempat floating profit +25 pips lalu membalik cepat, exit di Break Even."
+      },
+      {
+        id: "tr_5",
+        pair: "AUD/USD",
+        position: "BUY",
+        date: "2026-10-07T08:45",
+        lot: 0.20,
+        entry: 0.67100,
+        exit: 0.67650,
+        sl: 0.66850,
+        tp: 0.67700,
+        pnl: 110.00,
+        pips: 55.0,
+        strategy: "Trend Following",
+        emotion: "Disiplin & Tenang",
+        chartUrl: "",
+        notes: "Pullback ke 50 EMA pada tren naik Daily. Risk-reward sangat proporsional 1:2.2."
+      },
+      {
+        id: "tr_6",
+        pair: "EUR/JPY",
+        position: "SELL",
+        date: "2026-10-08T11:20",
+        lot: 0.15,
+        entry: 161.500,
+        exit: 162.000,
+        sl: 161.950,
+        tp: 160.200,
+        pnl: -50.00,
+        pips: -50.0,
+        strategy: "Breakout",
+        emotion: "Disiplin & Tenang",
+        chartUrl: "",
+        notes: "False breakout ke bawah lalu memantul terkena SL. Manajemen risiko terjaga aman."
+      }
+    ];
+
+    const INITIAL_CAPITAL = 10000; // Modal Awal Akun Demo/Real
+    let trades = [];
+    let currentFilter = 'ALL';
+    let currentSearch = '';
+    let chartMode = 'equity'; // 'equity' or 'bars'
+
+    // Init App
+    window.addEventListener('DOMContentLoaded', () => {
+      loadTrades();
+      calculateLot();
+      renderAll();
+      initChartResize();
+    });
+
+    // Local Storage Management
+    function loadTrades() {
+      const stored = localStorage.getItem('aurafx_trades');
+      if (stored) {
+        try {
+          trades = JSON.parse(stored);
+        } catch(e) {
+          trades = [...initialTrades];
+        }
+      } else {
+        trades = [...initialTrades];
+        saveToStorage();
+      }
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('aurafx_trades', JSON.stringify(trades));
+    }
+
+    // Calculations & Metrics
+    function getTradeResult(pnl) {
+      if (pnl > 0.5) return 'WIN';
+      if (pnl < -0.5) return 'LOSS';
+      return 'BE';
+    }
+
+    function updateKPIs() {
+      const totalTrades = trades.length;
+      let totalPnl = 0;
+      let wins = 0;
+      let losses = 0;
+      let bes = 0;
+      let totalWinAmount = 0;
+      let totalLossAmount = 0;
+      let totalRRR = 0;
+      let validRRRCount = 0;
+
+      trades.forEach(t => {
+        const pnl = parseFloat(t.pnl) || 0;
+        totalPnl += pnl;
+        const res = getTradeResult(pnl);
+        if (res === 'WIN') {
+          wins++;
+          totalWinAmount += pnl;
+        } else if (res === 'LOSS') {
+          losses++;
+          totalLossAmount += Math.abs(pnl);
+        } else {
+          bes++;
+        }
+
+        // Calculate realized RRR if risk exists
+        const risk = Math.abs(t.entry - t.sl);
+        const reward = Math.abs(t.exit - t.entry);
+        if (risk > 0) {
+          totalRRR += (reward / risk);
+          validRRRCount++;
+        }
+      });
+
+      const winRate = totalTrades > 0 ? ((wins / (totalTrades)) * 100).toFixed(1) : "0.0";
+      const profitFactor = totalLossAmount > 0 
+        ? (totalWinAmount / totalLossAmount).toFixed(2) 
+        : (totalWinAmount > 0 ? "99.9" : "0.00");
+      
+      const avgWin = wins > 0 ? (totalWinAmount / wins).toFixed(0) : "0";
+      const avgLoss = losses > 0 ? (totalLossAmount / losses).toFixed(0) : "0";
+      const avgRRRVal = validRRRCount > 0 ? (totalRRR / validRRRCount).toFixed(2) : "0.00";
+      const returnPct = ((totalPnl / INITIAL_CAPITAL) * 100).toFixed(2);
+
+      // DOM Updates
+      const kpiNetPnl = document.getElementById('kpiNetPnl');
+      kpiNetPnl.innerText = (totalPnl >= 0 ? "+$" : "-$") + Math.abs(totalPnl).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      kpiNetPnl.className = 'kpi-value ' + (totalPnl >= 0 ? 'text-profit' : 'text-loss');
+
+      const kpiReturn = document.getElementById('kpiReturn');
+      kpiReturn.innerText = `${returnPct >= 0 ? '+' : ''}${returnPct}% Return on Equity`;
+
+      document.getElementById('kpiWinRate').innerText = `${winRate}%`;
+      document.getElementById('kpiWinCount').innerText = `${wins} Menang • ${losses} Kalah • ${bes} BE`;
+
+      document.getElementById('kpiProfitFactor').innerText = profitFactor;
+      document.getElementById('kpiTotalTrades').innerText = `Total ${totalTrades} Transaksi`;
+
+      document.getElementById('kpiAvgRRR').innerText = `1:${avgRRRVal}`;
+      document.getElementById('kpiAvgWinLoss').innerText = `Win: +$${avgWin} | Loss: -$${avgLoss}`;
+
+      // Distribution Bar
+      const winPctBar = totalTrades > 0 ? (wins / totalTrades) * 100 : 0;
+      const lossPctBar = totalTrades > 0 ? (losses / totalTrades) * 100 : 0;
+      const bePctBar = totalTrades > 0 ? (bes / totalTrades) * 100 : 0;
+
+      document.getElementById('distribWin').style.width = `${winPctBar}%`;
+      document.getElementById('distribLoss').style.width = `${lossPctBar}%`;
+      document.getElementById('distribBe').style.width = `${bePctBar}%`;
+
+      document.getElementById('distribPctWin').innerText = `${winRate}% Win Rate`;
+      document.getElementById('lblWin').innerText = `Menang: ${wins}`;
+      document.getElementById('lblLoss').innerText = `Kalah: ${losses}`;
+      document.getElementById('lblBe').innerText = `BE: ${bes}`;
+    }
+
+    // Trade Table Rendering
+    function renderTable() {
+      const tbody = document.getElementById('tradeTableBody');
+      const emptyState = document.getElementById('emptyState');
+      tbody.innerHTML = '';
+
+      // Filter and Search logic
+      const filtered = trades.filter(t => {
+        const res = getTradeResult(t.pnl);
+        if (currentFilter === 'WIN' && res !== 'WIN') return false;
+        if (currentFilter === 'LOSS' && res !== 'LOSS') return false;
+        if (currentFilter === 'BE' && res !== 'BE') return false;
+        if (currentFilter === 'BUY' && t.position !== 'BUY') return false;
+        if (currentFilter === 'SELL' && t.position !== 'SELL') return false;
+
+        if (currentSearch.trim() !== '') {
+          const q = currentSearch.toLowerCase();
+          const matchPair = t.pair.toLowerCase().includes(q);
+          const matchStrat = (t.strategy || '').toLowerCase().includes(q);
+          const matchNotes = (t.notes || '').toLowerCase().includes(q);
+          const matchEmotion = (t.emotion || '').toLowerCase().includes(q);
+          if (!matchPair && !matchStrat && !matchNotes && !matchEmotion) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      emptyState.style.display = 'none';
+
+      // Sort newest first
+      const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      sorted.forEach(t => {
+        const tr = document.createElement('tr');
+        const res = getTradeResult(t.pnl);
+        const pnlNum = parseFloat(t.pnl) || 0;
+        const pnlFormatted = (pnlNum >= 0 ? '+$' : '-$') + Math.abs(pnlNum).toFixed(2);
+        const pnlClass = res === 'WIN' ? 'text-profit' : (res === 'LOSS' ? 'text-loss' : 'text-warning');
+
+        // Formatted date
+        const d = new Date(t.date);
+        const dateStr = d.toLocaleDateString('id-ID', {day: '2-digit', month: 'short', year: 'numeric'}) + ' ' + 
+                        d.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+
+        // Calculate Realized RRR
+        const risk = Math.abs(t.entry - t.sl);
+        const reward = Math.abs(t.exit - t.entry);
+        const rrrStr = risk > 0 ? `1:${(reward / risk).toFixed(1)}` : '-';
+
+        tr.onclick = (e) => {
+          if (e.target.closest('.action-btn-sm')) return;
+          openDetailModal(t.id);
+        };
+
+        tr.innerHTML = `
+          <td style="color: var(--text-secondary); font-size: 12.5px;">${dateStr}</td>
+          <td><strong>${t.pair}</strong></td>
+          <td><span class="badge ${t.position === 'BUY' ? 'badge-buy' : 'badge-sell'}">${t.position}</span></td>
+          <td>${parseFloat(t.lot).toFixed(2)}</td>
+          <td style="font-variant-numeric: tabular-nums;">${t.entry} → ${t.exit}</td>
+          <td style="color: var(--text-secondary); font-size: 12px; font-variant-numeric: tabular-nums;">
+            SL: ${t.sl}<br>TP: ${t.tp || '-'}
+          </td>
+          <td class="${pnlClass}" style="font-weight: 700; font-size: 14.5px;">
+            ${pnlFormatted}
+            ${t.pips ? `<span style="font-size: 11px; display: block; opacity: 0.8;">(${t.pips > 0 ? '+' : ''}${t.pips} pips)</span>` : ''}
+          </td>
+          <td><span class="badge badge-tag">${rrrStr}</span></td>
+          <td>
+            <span class="badge badge-tag">${t.strategy || 'Umum'}</span>
+            ${t.emotion ? `<span class="badge" style="background: rgba(255,255,255,0.03); color: var(--text-tertiary);">${t.emotion}</span>` : ''}
+          </td>
+          <td style="text-align: right;">
+            <button class="action-btn-sm" onclick="deleteTrade('${t.id}')" title="Hapus transaksi">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Chart Rendering (Native HTML5 Canvas - Apple Stocks/Health aesthetic)
+    function renderChart() {
+      const canvas = document.getElementById('equityChart');
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const width = rect.width;
+      const height = rect.height;
+
+      ctx.clearRect(0, 0, width, height);
+
+      if (trades.length === 0) {
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = '13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Belum ada data transaksi untuk kurva ekuitas', width / 2, height / 2);
+        return;
+      }
+
+      // Sort chronological
+      const sorted = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      if (chartMode === 'equity') {
+        // Build equity points
+        let runningEquity = INITIAL_CAPITAL;
+        const points = [{ xLabel: 'Start', equity: runningEquity, pnl: 0, date: '' }];
+        
+        sorted.forEach((t, idx) => {
+          runningEquity += (parseFloat(t.pnl) || 0);
+          points.push({
+            xLabel: `#${idx + 1}`,
+            equity: runningEquity,
+            pnl: parseFloat(t.pnl) || 0,
+            date: t.date,
+            pair: t.pair
+          });
+        });
+
+        // Scales
+        const equities = points.map(p => p.equity);
+        const minEq = Math.min(...equities) * 0.98;
+        const maxEq = Math.max(...equities) * 1.02;
+        const padX = 40;
+        const padY = 30;
+
+        const getX = (index) => padX + (index / (points.length - 1)) * (width - padX * 2);
+        const getY = (val) => height - padY - ((val - minEq) / (maxEq - minEq)) * (height - padY * 2);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+          const yVal = minEq + (i / 4) * (maxEq - minEq);
+          const y = getY(yVal);
+          ctx.beginPath();
+          ctx.moveTo(padX, y);
+          ctx.lineTo(width - padX, y);
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.font = '10px -apple-system, sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText('$' + Math.round(yVal).toLocaleString(), padX - 8, y + 3);
+        }
+
+        // Fill area gradient
+        const areaGrad = ctx.createLinearGradient(0, padY, 0, height - padY);
+        areaGrad.addColorStop(0, 'rgba(10, 132, 255, 0.35)');
+        areaGrad.addColorStop(1, 'rgba(10, 132, 255, 0.0)');
+
+        ctx.beginPath();
+        ctx.moveTo(getX(0), height - padY);
+        points.forEach((p, idx) => {
+          ctx.lineTo(getX(idx), getY(p.equity));
+        });
+        ctx.lineTo(getX(points.length - 1), height - padY);
+        ctx.closePath();
+        ctx.fillStyle = areaGrad;
+        ctx.fill();
+
+        // Stroke line
+        ctx.beginPath();
+        points.forEach((p, idx) => {
+          const x = getX(idx);
+          const y = getY(p.equity);
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = '#0A84FF';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = 'rgba(10, 132, 255, 0.6)';
+        ctx.shadowBlur = 12;
+        ctx.stroke();
+        ctx.shadowBlur = 0; // reset
+
+        // Draw dots
+        points.forEach((p, idx) => {
+          const x = getX(idx);
+          const y = getY(p.equity);
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = idx === points.length - 1 ? '#30D158' : '#0A84FF';
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        });
+
+      } else {
+        // PnL Bar Chart Mode
+        const padX = 40;
+        const padY = 30;
+        const pnls = sorted.map(t => parseFloat(t.pnl) || 0);
+        const maxAbs = Math.max(...pnls.map(Math.abs), 100) * 1.15;
+        const zeroY = height / 2;
+
+        // Zero line
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padX, zeroY);
+        ctx.lineTo(width - padX, zeroY);
+        ctx.stroke();
+
+        const barWidth = Math.min(32, (width - padX * 2) / sorted.length - 10);
+
+        sorted.forEach((t, idx) => {
+          const pnl = parseFloat(t.pnl) || 0;
+          const x = padX + (idx + 0.5) * ((width - padX * 2) / sorted.length) - barWidth / 2;
+          const barHeight = (Math.abs(pnl) / maxAbs) * (height / 2 - padY);
+          const y = pnl >= 0 ? zeroY - barHeight : zeroY;
+
+          ctx.fillStyle = pnl >= 0 ? '#30D158' : '#FF453A';
+          ctx.shadowColor = pnl >= 0 ? 'rgba(48,209,88,0.4)' : 'rgba(255,69,58,0.4)';
+          ctx.shadowBlur = 8;
+          ctx.fillRect(x, y, barWidth, barHeight);
+          ctx.shadowBlur = 0;
+
+          // Label
+          ctx.fillStyle = 'rgba(255,255,255,0.4)';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(t.pair.split('/')[0], x + barWidth / 2, height - 10);
+        });
+      }
+    }
+
+    function switchChartMode(mode) {
+      chartMode = mode;
+      document.getElementById('btnEquityCurve').classList.toggle('active', mode === 'equity');
+      document.getElementById('btnPnlBars').classList.toggle('active', mode === 'bars');
+      renderChart();
+    }
+
+    function initChartResize() {
+      window.addEventListener('resize', () => {
+        renderChart();
+      });
+    }
+
+    // Filter & Search Handlers
+    function setFilter(filterType, elem) {
+      currentFilter = filterType;
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      if (elem) elem.classList.add('active');
+      renderTable();
+    }
+
+    function handleSearchFilter() {
+      currentSearch = document.getElementById('searchInput').value;
+      renderTable();
+    }
+
+    // Lot Size Calculator Logic
+    function calculateLot() {
+      const balance = parseFloat(document.getElementById('calcBalance').value) || 0;
+      const riskPct = parseFloat(document.getElementById('calcRiskPct').value) || 0;
+      const slPips = parseFloat(document.getElementById('calcSlPips').value) || 1;
+      const pipVal = parseFloat(document.getElementById('calcPipVal').value) || 10;
+
+      const riskMoney = balance * (riskPct / 100);
+      const recLot = riskMoney / (slPips * pipVal);
+
+      document.getElementById('calcRecLot').innerText = `${recLot.toFixed(2)} Lot`;
+      document.getElementById('calcRiskAmount').innerText = `$${riskMoney.toFixed(2)}`;
+    }
+
+    // Modal Operations
+    function openNewTradeModal() {
+      document.getElementById('tradeForm').reset();
+      document.getElementById('editTradeId').value = '';
+      document.getElementById('modalTitle').innerText = 'Catat Transaksi Baru';
+      
+      // Default date to current local datetime
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('fDate').value = now.toISOString().slice(0, 16);
+      
+      document.getElementById('tradeModal').classList.add('active');
+    }
+
+    function closeTradeModal() {
+      document.getElementById('tradeModal').classList.remove('active');
+    }
+
+    function calculatePlannedRRR() {
+      const pos = document.getElementById('fPosition').value;
+      const entry = parseFloat(document.getElementById('fEntry').value) || 0;
+      const sl = parseFloat(document.getElementById('fSL').value) || 0;
+      const tp = parseFloat(document.getElementById('fTP').value) || 0;
+
+      if (entry > 0 && sl > 0 && tp > 0) {
+        const risk = Math.abs(entry - sl);
+        const reward = Math.abs(tp - entry);
+        if (risk > 0) {
+          const rrr = (reward / risk).toFixed(2);
+          // Auto fill suggestion pips if empty
+          const pipsDist = (risk * 10000).toFixed(0);
+        }
+      }
+    }
+
+    function calculatePnlAuto() {
+      // Optional helper when user inputs exit price
+      const entry = parseFloat(document.getElementById('fEntry').value) || 0;
+      const exit = parseFloat(document.getElementById('fExit').value) || 0;
+      const lot = parseFloat(document.getElementById('fLot').value) || 0.1;
+      const pos = document.getElementById('fPosition').value;
+
+      if (entry > 0 && exit > 0) {
+        const diff = pos === 'BUY' ? (exit - entry) : (entry - exit);
+        // Approx standard pip calculation for EUR/USD
+        const approxPips = (diff * 10000).toFixed(1);
+        const approxPnl = (approxPips * 10 * (lot / 1.0)).toFixed(2);
+        
+        if (!document.getElementById('fPnl').value) {
+          document.getElementById('fPnl').value = approxPnl;
+        }
+        if (!document.getElementById('fPips').value) {
+          document.getElementById('fPips').value = approxPips;
+        }
+      }
+    }
+
+    function saveTrade(e) {
+      e.preventDefault();
+      const id = document.getElementById('editTradeId').value || 'tr_' + Date.now();
+      
+      const newTrade = {
+        id: id,
+        pair: document.getElementById('fPair').value.toUpperCase().trim(),
+        position: document.getElementById('fPosition').value,
+        date: document.getElementById('fDate').value,
+        lot: parseFloat(document.getElementById('fLot').value) || 0.01,
+        entry: parseFloat(document.getElementById('fEntry').value) || 0,
+        exit: parseFloat(document.getElementById('fExit').value) || 0,
+        sl: parseFloat(document.getElementById('fSL').value) || 0,
+        tp: parseFloat(document.getElementById('fTP').value) || 0,
+        pnl: parseFloat(document.getElementById('fPnl').value) || 0,
+        pips: parseFloat(document.getElementById('fPips').value) || 0,
+        strategy: document.getElementById('fStrategy').value,
+        emotion: document.getElementById('fEmotion').value,
+        chartUrl: document.getElementById('fChartUrl').value.trim(),
+        notes: document.getElementById('fNotes').value.trim()
+      };
+
+      const existingIdx = trades.findIndex(t => t.id === id);
+      if (existingIdx >= 0) {
+        trades[existingIdx] = newTrade;
+        showToast('Transaksi berhasil diperbarui');
+      } else {
+        trades.unshift(newTrade);
+        showToast('Transaksi baru berhasil dicatat');
+      }
+
+      saveToStorage();
+      closeTradeModal();
+      renderAll();
+    }
+
+    function deleteTrade(id) {
+      if (confirm('Yakin ingin menghapus transaksi ini dari jurnal?')) {
+        trades = trades.filter(t => t.id !== id);
+        saveToStorage();
+        renderAll();
+        showToast('Transaksi dihapus');
+      }
+    }
+
+    // Detail View Modal
+    function openDetailModal(id) {
+      const t = trades.find(item => item.id === id);
+      if (!t) return;
+
+      const pnlNum = parseFloat(t.pnl) || 0;
+      const res = getTradeResult(pnlNum);
+      const pnlClass = res === 'WIN' ? 'text-profit' : (res === 'LOSS' ? 'text-loss' : 'text-warning');
+      const dateFormatted = new Date(t.date).toLocaleString('id-ID', {dateStyle: 'full', timeStyle: 'short'});
+
+      document.getElementById('detTitle').innerText = `${t.pair} (${t.position}) • ${dateFormatted}`;
+      
+      const grid = document.getElementById('detGrid');
+      grid.innerHTML = `
+        <div class="detail-item">
+          <div class="detail-title">Hasil P&L</div>
+          <div class="detail-val ${pnlClass}">${pnlNum >= 0 ? '+$' : '-$'}${Math.abs(pnlNum).toFixed(2)} (${t.pips} Pips)</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-title">Ukuran Posisi</div>
+          <div class="detail-val">${t.lot} Lot</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-title">Harga Masuk & Keluar</div>
+          <div class="detail-val">${t.entry} → ${t.exit}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-title">Stop Loss & Take Profit</div>
+          <div class="detail-val">SL: ${t.sl} | TP: ${t.tp || '-'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-title">Strategi / Setup</div>
+          <div class="detail-val">${t.strategy}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-title">Kondisi Mental & Psikologi</div>
+          <div class="detail-val">${t.emotion || '-'}</div>
+        </div>
+      `;
+
+      document.getElementById('detNotes').innerText = t.notes || 'Tidak ada catatan tambahan untuk transaksi ini.';
+
+      const chartWrap = document.getElementById('detChartWrap');
+      if (t.chartUrl) {
+        chartWrap.style.display = 'block';
+        document.getElementById('detChartLink').href = t.chartUrl;
+      } else {
+        chartWrap.style.display = 'none';
+      }
+
+      document.getElementById('detDeleteBtn').onclick = () => {
+        closeDetailModal();
+        deleteTrade(t.id);
+      };
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    // Export & Backup
+    function exportCSV() {
+      if (trades.length === 0) {
+        alert('Tidak ada data transaksi untuk diekspor.');
+        return;
+      }
+
+      const headers = ["ID", "Tanggal", "Pair", "Posisi", "Lot", "Entry", "Exit", "StopLoss", "TakeProfit", "PnL", "Pips", "Strategi", "Emosi", "Catatan"];
+      const rows = trades.map(t => [
+        t.id,
+        t.date,
+        `"${t.pair}"`,
+        t.position,
+        t.lot,
+        t.entry,
+        t.exit,
+        t.sl,
+        t.tp || '',
+        t.pnl,
+        t.pips || '',
+        `"${t.strategy || ''}"`,
+        `"${t.emotion || ''}"`,
+        `"${(t.notes || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `forex_trading_journal_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Data CSV berhasil diunduh');
+    }
+
+    function backupJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `aurafx_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Cadangan JSON berhasil diunduh');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2800);
+    }
+
+    function renderAll() {
+      updateKPIs();
+      renderTable();
+      renderChart();
+    }
+  </script>
+</body>
+</html>
